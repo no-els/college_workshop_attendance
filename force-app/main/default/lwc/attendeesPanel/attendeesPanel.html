@@ -1,0 +1,32 @@
+<template>
+  <p>Number of attendees: {attendeesCount}</p>
+  <div class="attendees-table-container">
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+      <thead>
+        <tr class="slds-text-title_caps">
+          <th scope="col">Attendee Name</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Site</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template for:each={attendees} for:item="al">
+          <tr key={al.Id}>
+            <td>{al.Name}</td>
+            <td>{al.Client__r.Phone}</td>
+            <td>{al.Client__r.Site__c}</td>
+            <td>
+              <lightning-button 
+                label="Remove"
+                variant="destructive"
+                data-id={al.Id}
+                onclick={handleRemove}>
+              </lightning-button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</template>

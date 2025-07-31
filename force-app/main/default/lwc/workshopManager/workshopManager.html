@@ -1,0 +1,29 @@
+<template>
+  <div class="workshop-banner">
+    <h1>{currentWorkshop.name}</h1>
+    <p><strong>Site:</strong> {currentWorkshop.site} | <strong>Date:</strong> {currentWorkshop.date}</p>
+    <lightning-button label="Go to workshop" onclick={handleEditWorkshop}></lightning-button>
+  </div>
+
+  <div class="three-col-container">
+    <div class="sidebar">
+      <c-workshop-selector 
+        onworkshopchange={handleWorkshopSelect}
+        onsitefilterchange={handleSiteFilterChange}>
+      </c-workshop-selector>
+    </div>
+
+    <div class="col">
+      <c-attendees-panel 
+        workshop-id={currentWorkshop.id}>
+      </c-attendees-panel>
+    </div>
+
+    <div class="col">
+      <c-possible-attendees-panel 
+        selected-workshop-id={currentWorkshop.id}
+        onrefreshattendees={handleRefreshAttendees}>
+      </c-possible-attendees-panel>
+    </div>
+  </div>
+</template>

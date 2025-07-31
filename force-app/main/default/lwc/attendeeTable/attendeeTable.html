@@ -1,0 +1,29 @@
+<template>
+  <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+    <thead>
+      <tr class="slds-text-title_caps">
+        <th scope="col">Attendee Name</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Site</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template for:each={contacts} for:item="pattendee">
+        <tr key={pattendee.Id}>
+          <td>{pattendee.Name}</td>
+          <td>{pattendee.Phone}</td>
+          <td>{pattendee.Site__c}</td>
+          <td>
+            <lightning-button 
+              label="Select" 
+              variant="brand" 
+              data-id={pattendee.Id} 
+              onclick={handleClick}>
+            </lightning-button>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+</template>

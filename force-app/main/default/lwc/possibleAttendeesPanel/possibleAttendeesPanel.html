@@ -1,0 +1,6 @@
+<template>
+  <c-create-parent-contact onrefreshpossibleattendees={handleRefreshFromChild}></c-create-parent-contact>
+  <c-site-filter-contact onsitefiltercontactchange={handleSiteFilterContactChange}></c-site-filter-contact>
+  <c-contact-search-input onsearchtermchange={handleSearchTermChange}></c-contact-search-input>
+  <c-attendee-table contacts={filteredContacts} onselect={handleClick}></c-attendee-table>
+</template>
