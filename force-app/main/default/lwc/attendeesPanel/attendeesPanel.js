@@ -36,4 +36,9 @@ export default class AttendeesPanel extends LightningElement {
   get attendeesCount() {
     return this.attendees.length;
   }
+
+  @api refresh() {
+    console.log("attempting refreshs")
+  return refreshApex(this.wiredResult);
+}
 }

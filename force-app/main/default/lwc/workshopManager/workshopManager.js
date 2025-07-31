@@ -29,6 +29,7 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
   handleRefreshAttendees() {
     const attendeesPanel = this.template.querySelector('c-attendees-panel');
     if (attendeesPanel && typeof attendeesPanel.refresh === 'function') {
+        console.log("refreshing...")
       attendeesPanel.refresh();
     } else {
       console.warn('Attendees panel not found or no refresh method available.');
