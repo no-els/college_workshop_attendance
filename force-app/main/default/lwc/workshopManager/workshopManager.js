@@ -4,7 +4,7 @@ import { workshopState, setWorkshop } from 'c/workshopService';
 
 export default class WorkshopManager extends NavigationMixin(LightningElement) {
   @track currentWorkshop = {};
-
+  @track workshopSelectorKey = 0; // key forces LWC to rerender
   connectedCallback() {
     this.currentWorkshop = { ...workshopState };
   }
@@ -42,4 +42,14 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
     console.log('Site filter changed to', newSite);
     // You can pass this down or store it if needed
   }
+  refreshWorkshops(event) {
+    // Option 1: rerender workshop selector by updating key
+    this.workshopSelectorKey += 1;
+    console.log("refreshing workshops")
+    // Optionally auto-select the new workshop
+    //const newWorkshopId = event.detail.id;
+    //this.currentWorkshop = { id: newWorkshopId };
+    //setWorkshop(this.currentWorkshop);
+  }
+
 }
