@@ -1,5 +1,5 @@
 import { LightningElement } from 'lwc';
-import searchWorkshops from '@salesforce/apex/WorkshopController.searchWorkshops';
+import searchWorkshops from '@salesforce/apex/CollegeSuccessWorkshop.searchWorkshops';
 import { debounce } from 'c/utils';
 
 
@@ -55,7 +55,8 @@ export default class WorkshopSelector extends LightningElement {
         id: selected.Id,
         name: selected.Name,
         site: selected.Site__c,
-        date: selected.Date__c
+        date: selected.Date__c,
+       nearPeer: selected.Near_Peer_Workshop__c
       }
     }));
   }

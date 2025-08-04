@@ -1,9 +1,12 @@
 <template>
   <div class="workshop-banner">
-    <h1>{currentWorkshop.name}  </h1>
+    <h1>{currentWorkshop.name} {currentWorkshop.nearPeer} </h1>
     <p><strong> Date:</strong> {currentWorkshop.date}</p>
     <lightning-button label="Go to workshop" onclick={handleEditWorkshop}></lightning-button>
     <c-new-workshop-modal onworkshopcreated={refreshWorkshops}></c-new-workshop-modal>
+    <c-near-peer-toggle workshop-id={currentWorkshop.id} is-near-peer={currentWorkshop.nearPeer}></c-near-peer-toggle>
+
+
     
   </div>
 

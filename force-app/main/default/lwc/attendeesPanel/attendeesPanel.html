@@ -8,6 +8,7 @@
           <th scope="col">Phone</th>
           <th scope="col">Site</th>
           <th scope="col">Action</th>
+          <th scope="col">Near Peer Status</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +24,16 @@
                 data-id={al.Id}
                 onclick={handleRemove}>
               </lightning-button>
+            </td>
+            <td>
+              <lightning-combobox
+                label="Near Peer Status"
+                value={al.Near_Peer_Status__c}
+                data-id={al.Id}
+                options={statusOptions}
+                onchange={handleStatusChange}
+                variant="label-hidden">
+              </lightning-combobox>
             </td>
           </tr>
         </template>

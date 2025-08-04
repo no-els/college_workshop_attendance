@@ -1,7 +1,9 @@
 import { LightningElement, api, wire } from 'lwc';
-import getAttendees from '@salesforce/apex/WorkshopController.getAttendees';
+import getAttendees from '@salesforce/apex/CollegeSuccessWorkshop.getAttendees';
 import deleteAttendee from '@salesforce/apex/WorkshopController.deleteAttendee';
 import { refreshApex } from '@salesforce/apex';
+import updateAttendeeStatus from '@salesforce/apex/CollegeSuccessWorkshop.updateAttendeeStatus';
+
 
 export default class AttendeesPanel extends LightningElement {
   @api workshopId;
@@ -12,10 +14,15 @@ export default class AttendeesPanel extends LightningElement {
   wiredAttendees(value) {
     this.wiredResult = value;
     if (value.data) {
-      this.attendees = value.data;
-    } else if (value.error) {
+  this.attendees = value.data.map(record => ({
+    ...record,
+    Near_Peer_Status__c: record.Near_Peer_Status__c || ''
+  }));
+} else if (value.error) {
       console.error('Error loading attendees:', value.error);
     }
+    console.log('Fetched attendees:', JSON.stringify(value.data, null, 2));
+
   }
 
   handleRemove(event) {
@@ -33,9 +40,31 @@ export default class AttendeesPanel extends LightningElement {
       });
   }
 
+  handleStatusChange(event) {
+  const attendeeId = event.target.dataset.id;
+  const newStatus = event.detail.value;
+  console.log("Updating status for attendee:", attendeeId, "to", newStatus);
+
+  updateAttendeeStatus({ attendeeId, newStatus })
+    .then(() => {
+      return refreshApex(this.wiredResult);
+    })
+    .catch(error => {
+      console.error('Error updating status:', error);
+    });
+}
+
   get attendeesCount() {
     return this.attendees.length;
   }
+
+  get statusOptions() {
+  return [
+    { label: 'N/A', value: 'N/A' },
+    { label: 'Mentor', value: 'Mentor' },
+    { label: 'Mentee', value: 'Mentee' }
+  ];
+}
 
   @api refresh() {
     console.log("attempting refreshs")

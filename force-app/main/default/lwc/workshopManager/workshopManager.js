@@ -12,6 +12,7 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
   handleWorkshopSelect(event) {
     setWorkshop(event.detail);
     this.currentWorkshop = { ...event.detail }; // Update tracked state
+    console.log('Workshop selected:', this.currentWorkshop);
   }
 
   handleEditWorkshop() {
