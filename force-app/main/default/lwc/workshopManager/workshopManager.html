@@ -1,34 +1,41 @@
 <template>
   <div class="workshop-banner">
-    <h1>{currentWorkshop.name} {currentWorkshop.nearPeer} </h1>
-    <p><strong> Date:</strong> {currentWorkshop.date}</p>
+    <h1>{currentWorkshop.name}</h1>
+    <p><strong>Date:</strong> {currentWorkshop.date}</p>
     <lightning-button label="Go to workshop" onclick={handleEditWorkshop}></lightning-button>
     <c-new-workshop-modal onworkshopcreated={refreshWorkshops}></c-new-workshop-modal>
-    <c-near-peer-toggle workshop-id={currentWorkshop.id} is-near-peer={currentWorkshop.nearPeer}></c-near-peer-toggle>
-
-
-    
+    <c-near-peer-toggle workshop-id={currentWorkshop.id} is-near-peer={currentWorkshop.isNearPeer}></c-near-peer-toggle>
   </div>
 
   <div class="three-col-container">
-    <div class="sidebar">
+  <div class={sidebarClass}>
+    <lightning-button-icon 
+  icon-name={sidebarIcon} 
+  variant="bare"
+  alternative-text="Toggle sidebar"
+  onclick={toggleSidebar}>
+</lightning-button-icon>
+
+
+    <template if:true={isSidebarOpen}>
       <c-workshop-selector 
         onworkshopchange={handleWorkshopSelect}
         onsitefilterchange={handleSiteFilterChange}>
       </c-workshop-selector>
-    </div>
-
-    <div class="col">
-      <c-attendees-panel 
-        workshop-id={currentWorkshop.id}>
-      </c-attendees-panel>
-    </div>
-
-    <div class="col">
-      <c-possible-attendees-panel 
-        selected-workshop-id={currentWorkshop.id}
-        onrefreshattendees={handleRefreshAttendees}>
-      </c-possible-attendees-panel>
-    </div>
+    </template>
   </div>
+
+  <!-- Put BOTH panels inside the flex row -->
+  <div class="col">
+    <c-possible-attendees-panel 
+      selected-workshop-id={currentWorkshop.id}
+      onrefreshattendees={handleRefreshAttendees}>
+    </c-possible-attendees-panel>
+  </div>
+
+  <div class="col">
+    <c-attendees-panel workshop-id={currentWorkshop.id}></c-attendees-panel>
+  </div>
+</div>
+
 </template>

@@ -1,0 +1,30 @@
+/* cohortDetail.css */
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.member-name {
+  flex: 1;
+  font-weight: 500;
+  color: #032d60;
+}
+
+.member-role {
+  flex: 1;
+  color: #54698d;
+}
+
+.remove-button {
+  flex-shrink: 0;
+}

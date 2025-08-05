@@ -5,8 +5,6 @@
       <thead>
         <tr class="slds-text-title_caps">
           <th scope="col">Attendee Name</th>
-          <th scope="col">Phone</th>
-          <th scope="col">Site</th>
           <th scope="col">Action</th>
           <th scope="col">Near Peer Status</th>
         </tr>
@@ -15,8 +13,6 @@
         <template for:each={attendees} for:item="al">
           <tr key={al.Id}>
             <td>{al.Name}</td>
-            <td>{al.Client__r.Phone}</td>
-            <td>{al.Client__r.Site__c}</td>
             <td>
               <lightning-button 
                 label="Remove"

@@ -1,0 +1,58 @@
+<template>
+  <lightning-card title="Cohort Detail">
+     <template if:true={isLoading}>
+    <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+  </template>
+    <template if:true={cohort}>
+      <div class="slds-p-horizontal_small">
+        <p><strong>Name:</strong> {cohort.Name}</p>
+
+        <template if:true={members.length}>
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-top_medium">
+            <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col">
+                  <div class="slds-truncate" title="Name">Name</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Role">Role</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Actions">Actions</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={members} for:item="m">
+                <tr key={m.Id}>
+                  <td>
+                    <div class="slds-truncate" title={m.Contact__r.Name}>{m.Contact__r.Name}</div>
+                  </td>
+                  <td>
+                    <div class="slds-truncate" title={m.Role__c}>{m.Role__c}</div>
+                  </td>
+                  <td>
+                    <lightning-button 
+                      label="Remove" 
+                      variant="destructive"
+                      data-id={m.Id}
+                      onclick={handleRemove}>
+                    </lightning-button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </template>
+
+        <template if:false={members.length}>
+          <p class="slds-m-top_medium">No members found in this cohort.</p>
+        </template>
+      </div>
+    </template>
+
+    <template if:true={error}>
+      <p class="slds-text-color_error slds-p-horizontal_small">Error loading cohort</p>
+    </template>
+  </lightning-card>
+</template>

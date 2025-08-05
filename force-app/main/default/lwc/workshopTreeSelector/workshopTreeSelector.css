@@ -1,0 +1,19 @@
+.series-section {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+.series-header {
+  cursor: pointer;
+  background: #f2f2f2;
+  padding: 0.5rem;
+}
+.toggle-arrow {
+  float: right;
+}
+.workshop-list {
+  padding-left: 1rem;
+}
+.workshop-list li {
+  cursor: pointer;
+  padding: 0.25rem 0;
+}

@@ -1,0 +1,26 @@
+<template>
+  <template for:each={seriesList} for:item="series">
+    <div key={series.id} class="series-section">
+      <div class="series-header" data-id={series.id} onclick={toggleSeries}>
+        <strong>{series.name}</strong>
+        <span class="toggle-arrow">{series.toggleArrow}</span>
+      </div>
+
+      <template if:true={series.isExpanded}>
+        <ul class="workshop-list">
+          <template for:each={series.workshops} for:item="workshop">
+            <li 
+              key={workshop.Id}
+              data-id={workshop.Id}
+              data-name={workshop.Name}
+              data-site={workshop.Site__c}
+              data-date={workshop.Date__c}
+              onclick={handleWorkshopClick}>
+              {workshop.Name} ({workshop.Date__c})
+            </li>
+          </template>
+        </ul>
+      </template>
+    </div>
+  </template>
+</template>

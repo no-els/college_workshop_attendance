@@ -1,0 +1,50 @@
+<template>
+  <lightning-card title="Add Members to Cohort">
+    <div class="slds-p-horizontal_small">
+      <lightning-input
+        type="search"
+        label="Search Contacts"
+        value={searchTerm}
+        onchange={handleSearchChange}>
+      </lightning-input>
+
+      <template if:true={filteredContacts}>
+        <table class="slds-table slds-table_bordered slds-m-top_small">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Site</th>
+              <th>Role</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={filteredContacts} for:item="c">
+              <tr key={c.Id}>
+                <td>{c.Name}</td>
+                <td>{c.Phone}</td>
+                <td>{c.Site__c}</td>
+                <td>
+                  <lightning-combobox
+                    data-role={c.Id}
+                    options={roleOptions}
+                    value="N/A">
+                  </lightning-combobox>
+                </td>
+                <td>
+                  <lightning-button
+                    data-id={c.Id}
+                    label="Add"
+                    onclick={handleAddToCohort}
+                    variant="brand">
+                  </lightning-button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </template>
+    </div>
+  </lightning-card>
+</template>

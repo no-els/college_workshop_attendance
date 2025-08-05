@@ -1,0 +1,20 @@
+<template>
+  <lightning-layout multiple-rows>
+    <!-- LEFT: Create + List -->
+    <lightning-layout-item size="4" padding="around-small">
+      <c-cohort-create oncreated={handleCohortCreated}></c-cohort-create>
+      <c-cohort-list cohorts={cohorts} onselect={handleCohortSelect}></c-cohort-list>
+    </lightning-layout-item>
+
+    <!-- RIGHT: Detail + Add Members -->
+    <lightning-layout-item size="8" padding="around-small">
+      <c-cohort-detail cohort-id={selectedCohortId}></c-cohort-detail>
+      <template if:true={selectedCohortId}>
+        <c-cohort-add-members
+          cohort-id={selectedCohortId}
+          onrefreshmembers={handleRefreshMembers}>
+        </c-cohort-add-members>
+      </template>
+    </lightning-layout-item>
+  </lightning-layout>
+</template>

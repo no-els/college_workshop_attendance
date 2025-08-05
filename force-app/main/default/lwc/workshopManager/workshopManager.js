@@ -5,8 +5,26 @@ import { workshopState, setWorkshop } from 'c/workshopService';
 export default class WorkshopManager extends NavigationMixin(LightningElement) {
   @track currentWorkshop = {};
   @track workshopSelectorKey = 0; // key forces LWC to rerender
+  @track isSidebarOpen = true;
   connectedCallback() {
     this.currentWorkshop = { ...workshopState };
+  }
+   get sidebarClass() {
+    return this.isSidebarOpen ? 'sidebar open' : 'sidebar collapsed';
+  }
+
+  get sidebarToggleLabel() {
+  return this.isSidebarOpen ? '«' : '»';
+}
+get sidebarIcon() {
+  return this.isSidebarOpen ? 'utility:chevronleft' : 'utility:chevronright';
+}
+
+
+  
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 
   handleWorkshopSelect(event) {

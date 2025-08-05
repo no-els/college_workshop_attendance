@@ -1,5 +1,4 @@
 <template>
-  <c-site-filter onfilterchange={handleSiteFilterChange}></c-site-filter>
   <lightning-input type="search" label="Search Workshops" onchange={handleInputChange}></lightning-input>
   <lightning-combobox 
     name="workshop"
@@ -8,4 +7,6 @@
     options={workshopOptions}
     onchange={handleWorkshopSelect}>
   </lightning-combobox>
+  <c-workshop-tree-selector onworkshopchange={handleWorkshopSelect}></c-workshop-tree-selector>
+
 </template>

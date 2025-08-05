@@ -44,4 +44,33 @@ public static void updateAttendeeStatus(String attendeeId, String newStatus) {
         }
     }
 
+
+@AuraEnabled(cacheable=true)
+public static Map<Id, List<Workshop__c>> getWorkshopsGroupedBySeries() {
+    Map<Id, List<Workshop__c>> seriesToWorkshops = new Map<Id, List<Workshop__c>>();
+
+    List<Workshop__c> workshops = [
+        SELECT Id, Name, Workshop_Series__r.Name, Workshop_Series__c, Date__c, Site__c 
+        FROM Workshop__c 
+        WHERE Workshop_Series__c != null
+        ORDER BY Workshop_Series__r.Name, Date__c
+    ];
+
+    for (Workshop__c w : workshops) {
+        if (!seriesToWorkshops.containsKey(w.Workshop_Series__c)) {
+            seriesToWorkshops.put(w.Workshop_Series__c, new List<Workshop__c>());
+        }
+        seriesToWorkshops.get(w.Workshop_Series__c).add(w);
+    }
+
+    return seriesToWorkshops;
+}
+
+@AuraEnabled(cacheable=true)
+public static List<Cohort__c> getCohorts() {
+    return [SELECT Id, Name FROM Cohort__c];
+}
+
+
+
 }

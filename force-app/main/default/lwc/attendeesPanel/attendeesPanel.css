@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.attendees-table-container {
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #d8dde6;
+  border-radius: 4px;
+}
+
+.attendees-table-container table {
+  width: 100%;
+  table-layout: auto;
+}
