@@ -27,6 +27,7 @@
 
   <!-- Put BOTH panels inside the flex row -->
   <div class="col">
+    <c-batch-attendance-from-cohort workshop-id={currentWorkshop.id}></c-batch-attendance-from-cohort>
     <c-possible-attendees-panel 
       selected-workshop-id={currentWorkshop.id}
       onrefreshattendees={handleRefreshAttendees}>

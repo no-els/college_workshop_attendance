@@ -71,6 +71,71 @@ public static List<Cohort__c> getCohorts() {
     return [SELECT Id, Name FROM Cohort__c];
 }
 
+@AuraEnabled
+public static void addBatchAttendance(List<Map<String, String>> records) {
+    if (records == null || records.isEmpty()) return;
+
+    Set<Id> contactIds = new Set<Id>();
+    Set<Id> workshopIds = new Set<Id>();
+
+    // Collect Contact and Workshop Ids
+    for (Map<String, String> record : records) {
+        contactIds.add(record.get('ContactId'));
+        workshopIds.add(record.get('WorkshopId'));
+    }
+
+    // Fetch contact names
+    Map<Id, Contact> contactsMap = new Map<Id, Contact>(
+        [SELECT Id, Name FROM Contact WHERE Id IN :contactIds]
+    );
+
+    // Fetch existing attendees to avoid duplicates
+    Set<String> existingKeys = new Set<String>();
+    for (Attendee__c existing : [
+        SELECT Id, Client__c, Workshop__c 
+        FROM Attendee__c 
+        WHERE Client__c IN :contactIds AND Workshop__c IN :workshopIds
+    ]) {
+        existingKeys.add(existing.Client__c + '-' + existing.Workshop__c);
+    }
+
+    // Build list of new attendees
+    List<Attendee__c> attendeesToInsert = new List<Attendee__c>();
+
+    for (Map<String, String> record : records) {
+        String contactId = record.get('ContactId');
+        String workshopId = record.get('WorkshopId');
+        String status = record.get('Status'); // Present, Excused Absence, etc.
+        String nearPeer = record.get('Near_Peer'); // Mentor, Mentee, N/A
+
+        String key = contactId + '-' + workshopId;
+        if (existingKeys.contains(key)) continue;
+
+        Contact c = contactsMap.get(contactId);
+        if (c == null) continue;
+
+        attendeesToInsert.add(new Attendee__c(
+            Client__c = contactId,
+            Workshop__c = workshopId,
+            Name = c.Name,
+            Attendee_Status__c = status,
+            Near_Peer_Status__c = nearPeer
+        ));
+    }
+
+    if (!attendeesToInsert.isEmpty()) {
+        insert attendeesToInsert;
+    }
+}
+
+
+
+public class AttendanceWrapper {
+    @AuraEnabled public Id contactId;
+    @AuraEnabled public String status;
+}
+
+
 
 
 }

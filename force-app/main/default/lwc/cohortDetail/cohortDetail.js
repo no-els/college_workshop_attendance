@@ -31,6 +31,7 @@ export default class CohortDetail extends LightningElement {
 
   @api
   refresh() {
+    console.log("Refreshing cohort detail for in detail component:", this.cohortId);
     if (this.wiredCohortDetail) {
       return refreshApex(this.wiredCohortDetail);
     }

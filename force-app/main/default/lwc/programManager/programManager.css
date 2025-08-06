@@ -1,0 +1,66 @@
+/* Tabs – style spacing between tabset and content */
+lightning-tabset {
+  margin-bottom: 1rem;
+}
+
+/* General container padding */
+.section-container {
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Section headers */
+.section-header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #032d60;
+  margin-bottom: 0.5rem;
+}
+
+/* Cohort and Workshop list links */
+.cohort-list a,
+.workshop-list a {
+  text-decoration: none;
+  color: #0176d3;
+  cursor: pointer;
+}
+
+.cohort-list a:hover,
+.workshop-list a:hover {
+  text-decoration: underline;
+}
+
+/* Table styling (shared between workshop/cohort detail) */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #d8dde6;
+  text-align: left;
+}
+
+.custom-table th {
+  background-color: #f4f6f9;
+  font-weight: bold;
+  color: #3e3e3c;
+}
+
+/* Button margin */
+.slds-button {
+  margin-top: 0.5rem;
+}
+
+/* Loading spinner container */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}

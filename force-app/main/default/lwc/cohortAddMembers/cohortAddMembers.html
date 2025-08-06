@@ -1,43 +1,44 @@
 <template>
   <lightning-card title="Add Members to Cohort">
     <div class="slds-p-horizontal_small">
-      <lightning-input
-        type="search"
-        label="Search Contacts"
-        value={searchTerm}
+      <lightning-input 
+        type="search" 
+        label="Search Contacts" 
+        value={searchTerm} 
         onchange={handleSearchChange}>
       </lightning-input>
 
-      <template if:true={filteredContacts}>
-        <table class="slds-table slds-table_bordered slds-m-top_small">
+      <template if:true={loading}>
+        <lightning-spinner size="small"></lightning-spinner>
+      </template>
+
+      <template if:true={filteredContacts.length}>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-top_small">
           <thead>
-            <tr>
+            <tr class="slds-text-title_caps">
               <th>Name</th>
-              <th>Phone</th>
-              <th>Site</th>
               <th>Role</th>
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <template for:each={filteredContacts} for:item="c">
-              <tr key={c.Id}>
-                <td>{c.Name}</td>
-                <td>{c.Phone}</td>
-                <td>{c.Site__c}</td>
+            <template for:each={filteredContacts} for:item="contact">
+              <tr key={contact.Id}>
+                <td>{contact.Name}</td>
                 <td>
                   <lightning-combobox
-                    data-role={c.Id}
+                    data-role={contact.Id}
                     options={roleOptions}
-                    value="N/A">
+                    value="N/A"
+                    placeholder="Select role">
                   </lightning-combobox>
                 </td>
                 <td>
-                  <lightning-button
-                    data-id={c.Id}
-                    label="Add"
-                    onclick={handleAddToCohort}
-                    variant="brand">
+                  <lightning-button 
+                    label="Add" 
+                    variant="brand" 
+                    data-id={contact.Id} 
+                    onclick={handleAddtoCohort}>
                   </lightning-button>
                 </td>
               </tr>

@@ -25,10 +25,19 @@ public with sharing class CohortController {
 public static void addMembers(List<Cohort_Member__c> newMembers) {
     if (newMembers == null || newMembers.isEmpty()) return;
 
-    // Assume all records belong to same cohort
-    Id cohortId = newMembers[0].Cohort__c;
+    // Safely find the Cohort__c value from the list
+    Id cohortId;
+    for (Cohort_Member__c cm : newMembers) {
+        if (cm.Cohort__c != null) {
+            cohortId = cm.Cohort__c;
+            break;
+        }
+    }
+    if (cohortId == null) {
+        throw new AuraHandledException('Cohort__c is required on each member.');
+    }
 
-    // Extract Contact Ids
+    // Extract Contact__c Ids from input
     Set<Id> newContactIds = new Set<Id>();
     for (Cohort_Member__c cm : newMembers) {
         if (cm.Contact__c != null) {
@@ -36,17 +45,17 @@ public static void addMembers(List<Cohort_Member__c> newMembers) {
         }
     }
 
-    // Query existing members
+    // Find existing members in the cohort
     Set<Id> existingContactIds = new Set<Id>();
     for (Cohort_Member__c existing : [
-        SELECT Id, Contact__c 
-        FROM Cohort_Member__c 
+        SELECT Id, Contact__c
+        FROM Cohort_Member__c
         WHERE Cohort__c = :cohortId AND Contact__c IN :newContactIds
     ]) {
         existingContactIds.add(existing.Contact__c);
     }
 
-    // Filter out any duplicates
+    // Only insert the new ones
     List<Cohort_Member__c> toInsert = new List<Cohort_Member__c>();
     for (Cohort_Member__c cm : newMembers) {
         if (!existingContactIds.contains(cm.Contact__c)) {
