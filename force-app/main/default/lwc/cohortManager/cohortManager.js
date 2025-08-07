@@ -1,6 +1,7 @@
 import { LightningElement, track, wire } from 'lwc';
 import getCohorts from '@salesforce/apex/CohortController.getCohorts';
 import { refreshApex } from '@salesforce/apex';
+import deleteCohort from '@salesforce/apex/CohortController.deleteCohort';
 
 export default class CohortManager extends LightningElement {
   @track cohorts = [];
@@ -21,6 +22,17 @@ export default class CohortManager extends LightningElement {
   handleCohortSelect(event) {
     this.selectedCohortId = event.detail;
   }
+
+  handleDeleteCohort(event) {
+  const cohortId = event.detail;
+  deleteCohort({ cohortId })
+    .then(() => {
+      return refreshApex(this.wiredCohortsResult);
+    })
+    .catch(error => {
+      console.error('Error deleting cohort', error);
+    });
+}
 
   handleCohortCreated() {
     this.refreshCohorts();

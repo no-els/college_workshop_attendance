@@ -29,6 +29,13 @@ public static void updateAttendeeStatus(String attendeeId, String newStatus) {
     update attendee;
 }
 
+@AuraEnabled
+public static void updateAttendeeAttendance(String attendeeId, String attendanceStatus){
+    Attendee__c attendee = [SELECT Id, Attendee_Status__c FROM Attendee__c WHERE Id = :attendeeId LIMIT 1];
+    attendee.Attendee_Status__c = attendanceStatus;
+    update attendee;
+}
+
 @AuraEnabled(cacheable=true)
     public static List<Attendee__c> getAttendees(Id workshopId) {
         try {
@@ -37,7 +44,8 @@ public static void updateAttendeeStatus(String attendeeId, String newStatus) {
             Workshop__c,
             Client__r.Phone, 
             Client__r.Site__c, 
-            Near_Peer_Status__c 
+            Near_Peer_Status__c,
+            Attendee_Status__c
             FROM Attendee__c WHERE Workshop__c = :workshopId order by CreatedDate asc];
         } catch (Exception e) {
             throw new AuraHandledException('Error: ' + e.getMessage());

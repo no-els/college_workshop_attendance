@@ -28,15 +28,23 @@ export default class WorkshopTreeSelector extends LightningElement {
         return this.expandedSeries.has(seriesId);
     }
 
-    handleWorkshopClick(event) {
-        const workshopId = event.currentTarget.dataset.id;
-        const name = event.currentTarget.dataset.name;
-        const site = event.currentTarget.dataset.site;
-        const date = event.currentTarget.dataset.date;
-        this.dispatchEvent(new CustomEvent('workshopchange', {
-            detail: { id: workshopId, name, site, date }
-        }));
+   handleWorkshopClick(event) {
+  const li = event.currentTarget;
+  const dataset = li.dataset;
+
+  console.log('Clicked workshop data:', dataset);
+
+  this.dispatchEvent(new CustomEvent('workshopchange', {
+    detail: {
+      id: dataset.id,
+      name: dataset.name,
+      date: dataset.date,
+      nearPeer: dataset.nearpeer === 'true' // cast to boolean if needed
     }
+  }));
+}
+
+
 
     get seriesList() {
     return Object.entries(this.groupedWorkshops).map(([seriesId, workshops]) => {

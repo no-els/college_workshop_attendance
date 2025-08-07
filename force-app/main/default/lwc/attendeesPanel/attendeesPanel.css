@@ -1,20 +1,42 @@
 :host {
   display: block;
-  width: 100%;
-  flex-grow: 1;
+  font-size: 0.75rem;
+  --lwc-spacingSmall: 0.25rem;
+}
+
+.count-text {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.75rem;
+  color: #444;
 }
 
 .attendees-table-container {
   width: 100%;
   overflow-x: auto;
-  box-sizing: border-box;
-  padding: 1rem;
-  background-color: #ffffff;
+  padding: 0.5rem;
+  background: #fff;
   border: 1px solid #d8dde6;
   border-radius: 4px;
 }
 
-.attendees-table-container table {
-  width: 100%;
-  table-layout: auto;
+.slim-table th,
+.slim-table td {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.slim-button {
+  --slds-c-button-line-height: 1rem;
+  --slds-c-button-font-size: 0.65rem;
+  --slds-c-button-spacing-inline-start: 0.25rem;
+  --slds-c-button-spacing-inline-end: 0.25rem;
+  height: 1.5rem;
+  padding: 0 0.25rem;
+}
+
+.slim-combobox {
+  --slds-c-input-height: 1.5rem;
+  font-size: 0.7rem;
+  padding: 0;
 }

@@ -3,10 +3,21 @@
     <template if:true={hasCohorts}>
       <ul>
         <template for:each={cohorts} for:item="cohort">
-          <li key={cohort.Id}>
-            <a href="javascript:void(0)" data-id={cohort.Id} onclick={handleSelect}>
-              {cohort.Name}
-            </a>
+          <li key={cohort.Id} class="slds-m-bottom_x-small">
+            <div class="slds-grid slds-grid_align-spread">
+              <a href="javascript:void(0)" data-id={cohort.Id} onclick={handleSelect}>
+                {cohort.Name}
+              </a>
+              <lightning-button-icon 
+                icon-name="utility:delete"
+                alternative-text="Delete"
+                data-id={cohort.Id}
+                onclick={handleDelete}
+                variant="bare"
+                size="small"
+                class="slds-m-left_x-small">
+              </lightning-button-icon>
+            </div>
           </li>
         </template>
       </ul>

@@ -1,17 +1,15 @@
 <template>
-  <lightning-card>
-    <div class="slds-p-around_medium">
-      <lightning-input 
-        type="toggle"
-        label="Near Peer Workshop Status"
-        checked={isNearPeer}
-        onchange={handleToggle}
-        disabled={isLoading}>
-      </lightning-input>
+  <div class="near-peer-toggle-inline">
+  <lightning-input 
+    type="toggle"
+    label="Near Peer"
+    checked={isNearPeer}
+    onchange={handleToggle}
+    disabled={isLoading}>
+  </lightning-input>
+  <template if:true={isLoading}>
+    <lightning-spinner size="small" alternative-text="Loading"></lightning-spinner>
+  </template>
+</div>
 
-      <template if:true={isLoading}>
-        <lightning-spinner size="small"></lightning-spinner>
-      </template>
-    </div>
-  </lightning-card>
 </template>

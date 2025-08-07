@@ -1,19 +1,52 @@
-.series-section {
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
-}
 .series-header {
+  background-color: #f3f2f2;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
-  background: #f2f2f2;
-  padding: 0.5rem;
+  border-bottom: 1px solid #d8dde6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.toggle-arrow {
-  float: right;
+
+.series-name {
+  font-size: 0.75rem;
 }
+
 .workshop-list {
-  padding-left: 1rem;
+  list-style-type: none;
+  padding-left: 10px;
+  margin: 0;
 }
-.workshop-list li {
+
+.workshop-item {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
   cursor: pointer;
-  padding: 0.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+
+.workshop-item:hover {
+  background-color: #e3f2fd;
+  font-weight: 500;
+}
+
+.workshop-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workshop-date {
+  margin-left: 6px;
+  color: #999;
+  font-size: 0.65rem;
+  white-space: nowrap;
 }

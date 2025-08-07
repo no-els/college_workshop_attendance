@@ -1,9 +1,8 @@
 <template>
   <template for:each={seriesList} for:item="series">
     <div key={series.id} class="series-section">
-      <div class="series-header" data-id={series.id} onclick={toggleSeries}>
-        <strong>{series.name}</strong>
-        <span class="toggle-arrow">{series.toggleArrow}</span>
+      <div class="series-header slds-p-around_x-small" data-id={series.id} onclick={toggleSeries}>
+        <span class="series-name">{series.toggleArrow} {series.name}</span>
       </div>
 
       <template if:true={series.isExpanded}>
@@ -15,8 +14,11 @@
               data-name={workshop.Name}
               data-site={workshop.Site__c}
               data-date={workshop.Date__c}
-              onclick={handleWorkshopClick}>
-              {workshop.Name} ({workshop.Date__c})
+              data-nearpeer={workshop.Near_Peer_Workshop__c}
+              onclick={handleWorkshopClick}
+              class="workshop-item">
+              <span class="workshop-name">{workshop.Name}</span>
+              <span class="workshop-date">({workshop.Date__c})</span>
             </li>
           </template>
         </ul>

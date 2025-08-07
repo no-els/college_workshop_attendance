@@ -3,3 +3,18 @@
   display: flex;
   justify-content: center;
 }
+
+.near-peer-toggle-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.near-peer-toggle-inline lightning-input {
+  margin: 0;
+}
+
+.near-peer-toggle-inline lightning-spinner {
+  margin: 0;
+}

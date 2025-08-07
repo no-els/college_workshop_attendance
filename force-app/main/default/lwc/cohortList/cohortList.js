@@ -8,6 +8,11 @@ export default class CohortList extends LightningElement {
     this.dispatchEvent(new CustomEvent('select', { detail: cohortId }));
   }
 
+  handleDelete(event) {
+    const cohortId = event.target.dataset.id;
+    this.dispatchEvent(new CustomEvent('delete', { detail: cohortId }));
+  }
+
   get hasCohorts() {
     return this.cohorts && this.cohorts.length > 0;
   }

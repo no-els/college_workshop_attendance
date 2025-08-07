@@ -1,12 +1,13 @@
 <template>
-  <p>Number of attendees: {attendeesCount}</p>
+  <p class="count-text">Number of attendees: {attendeesCount}</p>
   <div class="attendees-table-container">
-    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer slim-table">
       <thead>
-        <tr class="slds-text-title_caps">
-          <th scope="col">Attendee Name</th>
+        <tr>
+          <th scope="col">Name</th>
           <th scope="col">Action</th>
-          <th scope="col">Near Peer Status</th>
+          <th scope="col">Near Peer</th>
+          <th scope="col">Attendance</th>
         </tr>
       </thead>
       <tbody>
@@ -15,20 +16,32 @@
             <td>{al.Name}</td>
             <td>
               <lightning-button 
-                label="Remove"
+                label="×"
+                title="Remove"
                 variant="destructive"
                 data-id={al.Id}
-                onclick={handleRemove}>
+                onclick={handleRemove}
+                class="slim-button">
               </lightning-button>
             </td>
             <td>
               <lightning-combobox
-                label="Near Peer Status"
                 value={al.Near_Peer_Status__c}
                 data-id={al.Id}
                 options={statusOptions}
                 onchange={handleStatusChange}
-                variant="label-hidden">
+                variant="label-hidden"
+                class="slim-combobox">
+              </lightning-combobox>
+            </td>
+            <td>
+              <lightning-combobox
+                value={al.Attendee_Status__c}
+                data-id={al.Id}
+                options={AttendanceOptions}
+                onchange={handleAttendanceChange}
+                variant="label-hidden"
+                class="slim-combobox">
               </lightning-combobox>
             </td>
           </tr>

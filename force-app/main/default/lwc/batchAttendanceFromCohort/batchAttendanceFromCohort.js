@@ -50,6 +50,7 @@ export default class BatchAttendanceFromCohort extends LightningElement {
         return addBatchAttendance({ records: payload });
       })
       .then(() => {
+        console.log('Batch attendance added successfully');
         this.dispatchEvent(new CustomEvent('refreshattendees'));
       })
       .catch(error => {

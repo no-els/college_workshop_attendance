@@ -3,7 +3,7 @@
     <!-- LEFT: Create + List -->
     <lightning-layout-item size="4" padding="around-small">
       <c-cohort-create oncreated={handleCohortCreated}></c-cohort-create>
-      <c-cohort-list cohorts={cohorts} onselect={handleCohortSelect}></c-cohort-list>
+      <c-cohort-list cohorts={cohorts} onselect={handleCohortSelect} ondelete={handleDeleteCohort}></c-cohort-list>
     </lightning-layout-item>
 
     <!-- RIGHT: Detail + Add Members -->

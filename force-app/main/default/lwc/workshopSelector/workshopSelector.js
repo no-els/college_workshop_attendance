@@ -47,7 +47,8 @@ export default class WorkshopSelector extends LightningElement {
   }
   
 
-  handleWorkshopSelect(event) {
+  handleWorkshopSelecta(event) {
+    console.log("Workshop selected!", event.target);
     const selectedId = event.target.value;
     const selected = this.workshops.find(w => w.Id === selectedId);
     this.dispatchEvent(new CustomEvent('workshopchange', {
@@ -60,6 +61,46 @@ export default class WorkshopSelector extends LightningElement {
       }
     }));
   }
+  
+
+  handleWorkshopSelect(event) {
+  // If event was dispatched manually with CustomEvent
+  if (event.detail && event.detail.id) {
+    const selected = event.detail;
+
+    console.log('Workshop selected via tree:', selected);
+
+    this.dispatchEvent(new CustomEvent('workshopchange', {
+      detail: {
+        id: selected.id,
+        name: selected.name,
+        site: selected.site, // Optional
+        date: selected.date,
+        nearPeer: selected.nearPeer
+      }
+    }));
+  }
+  // If event came from lightning-combobox
+  else if (event.target && event.target.value) {
+    const selectedId = event.target.value;
+    const selected = this.workshops.find(w => w.Id === selectedId);
+
+    if (selected) {
+      console.log('Workshop selected via dropdown:', selected);
+
+      this.dispatchEvent(new CustomEvent('workshopchange', {
+        detail: {
+          id: selected.Id,
+          name: selected.Name,
+          site: selected.Site__c,
+          date: selected.Date__c,
+          nearPeer: selected.Near_Peer_Workshop__c
+        }
+      }));
+    }
+  }
+}
+
 
   
 }

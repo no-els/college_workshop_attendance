@@ -102,4 +102,19 @@ public static void addMembers(List<Cohort_Member__c> newMembers) {
             'members' => members
         };
     }
+
+    @AuraEnabled
+    public static void deleteCohort(Id cohortId) {
+    // Delete all related Cohort Members first
+    List<Cohort_Member__c> membersToDelete = [
+        SELECT Id FROM Cohort_Member__c WHERE Cohort__c = :cohortId
+    ];
+    if (!membersToDelete.isEmpty()) {
+        delete membersToDelete;
+    }
+
+    // Now delete the Cohort
+    delete [SELECT Id FROM Cohort__c WHERE Id = :cohortId];
+}
+
 }

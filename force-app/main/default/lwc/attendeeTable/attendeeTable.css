@@ -2,23 +2,14 @@
   display: block;
   width: 100%;
   flex-grow: 1;
+  font-size: 0.75rem;
 }
 
 .attendee-table-container {
   width: 100%;
   overflow-x: auto;
   box-sizing: border-box;
-  padding: 1rem;
-  background-color: #ffffff;
-  border: 1px solid #d8dde6;
-  border-radius: 4px;
-}
-
-.attendee-table-container {
-  width: 100%;
-  overflow-x: auto;
-  box-sizing: border-box;
-  padding: 1rem;
+  padding: 0.5rem;
   background-color: #ffffff;
   border: 1px solid #d8dde6;
   border-radius: 4px;
@@ -26,6 +17,30 @@
   min-height: 100px;
 }
 
+/* Slim the table rows */
+.attendee-table-container table {
+  width: 100%;
+  table-layout: auto;
+  font-size: 0.75rem;
+}
+
+.attendee-table-container th,
+.attendee-table-container td {
+  padding: 0.25rem 0.5rem;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+lightning-button {
+  --slds-c-button-font-size: 0.65rem;
+  --slds-c-button-line-height: 1rem;
+  --slds-c-button-spacing-inline-start: 0.25rem;
+  --slds-c-button-spacing-inline-end: 0.25rem;
+  height: 1.5rem;
+  padding: 0 0.25rem;
+}
+
+/* Spinner styling */
 lightning-spinner {
   position: absolute;
   top: 50%;
