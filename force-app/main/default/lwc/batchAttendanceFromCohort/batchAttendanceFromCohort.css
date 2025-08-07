@@ -1,6 +1,23 @@
-table {
-  width: 100%;
+:host {
+  font-size: 0.85rem;
 }
-td, th {
-  padding: 0.5rem;
+
+.compact-card {
+  --slds-c-card-body-spacing-inline: 0.5rem;
+  --slds-c-card-body-spacing-block: 0.5rem;
+}
+
+.slim-input lightning-combobox {
+  font-size: 0.85rem;
+  min-height: 1.5rem;
+}
+
+.slim-button lightning-button {
+  font-size: 0.8rem;
+  height: 1.75rem;
+  padding: 0.2rem 0.6rem;
+}
+
+lightning-card h2.slds-card__header-title {
+  font-size: 0.9rem;
 }
