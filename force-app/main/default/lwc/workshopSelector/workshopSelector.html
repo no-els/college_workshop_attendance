@@ -1,5 +1,4 @@
 <template>
-    <c-workshop-series-create-modal onworkshopcreated={handleWorkshopCreated}></c-workshop-series-create-modal>
   <lightning-combobox 
     name="workshop"
     label="Select Workshop"
@@ -7,6 +6,8 @@
     options={workshopOptions}
     onchange={handleWorkshopSelect}>
   </lightning-combobox>
+  <c-workshop-series-create-modal onworkshopcreated={handleWorkshopCreated}></c-workshop-series-create-modal>
+  <c-new-workshop-modal onworkshopcreated={refreshWorkshops}></c-new-workshop-modal>
   <c-workshop-tree-selector onworkshopchange={handleWorkshopSelect}></c-workshop-tree-selector>
 
 

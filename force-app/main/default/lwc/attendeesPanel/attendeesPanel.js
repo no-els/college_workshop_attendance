@@ -10,6 +10,11 @@ export default class AttendeesPanel extends LightningElement {
   @api workshopId;
   attendees = [];
   wiredResult;
+  @api bottomOffset = 280;
+  get containerStyle() {
+    // Uses viewport height; adjust offset as needed or expose it from parent
+    return `max-height: calc(100vh - ${this.bottomOffset}px);`;
+  }
 
   @wire(getAttendees, { workshopId: '$workshopId' })
   wiredAttendees(value) {
