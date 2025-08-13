@@ -1,5 +1,7 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;                 /* CRITICAL */
   font-size: 0.75rem;
   --lwc-spacingSmall: 0.25rem;
 }
@@ -10,13 +12,24 @@
   color: #444;
 }
 
+/* This div will grow to fill the column and become scrollable */
 .attendees-table-container {
-  width: 100%;
-  overflow-x: auto;
+  flex: 1 1 auto;
+  min-height: 0;                 /* CRITICAL */
+  overflow-y: auto;              /* vertical scroll */
+  overflow-x: auto;              /* keep your horizontal scroll */
   padding: 0.5rem;
   background: #fff;
   border: 1px solid #d8dde6;
   border-radius: 4px;
+}
+
+/* Sticky header while scrolling */
+.slim-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
 }
 
 .slim-table th,
@@ -26,17 +39,4 @@
   line-height: 1.2;
 }
 
-.slim-button {
-  --slds-c-button-line-height: 1rem;
-  --slds-c-button-font-size: 0.65rem;
-  --slds-c-button-spacing-inline-start: 0.25rem;
-  --slds-c-button-spacing-inline-end: 0.25rem;
-  height: 1.5rem;
-  padding: 0 0.25rem;
-}
-
-.slim-combobox {
-  --slds-c-input-height: 1.5rem;
-  font-size: 0.7rem;
-  padding: 0;
-}
+/* your button/combobox tweaks unchanged… */

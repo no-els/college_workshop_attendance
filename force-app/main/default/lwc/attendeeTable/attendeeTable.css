@@ -1,27 +1,37 @@
+/* Make the component itself a flex column that can shrink inside a flex parent */
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;            /* CRITICAL for inner scrolling in flex layouts */
   width: 100%;
-  flex-grow: 1;
   font-size: 0.75rem;
 }
 
+/* Scroll container that fills available height */
 .attendee-table-container {
-  width: 100%;
-  overflow-x: auto;
-  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-height: 0;                 /* CRITICAL */
+  overflow-y: auto;              /* vertical scroll */
+  overflow-x: auto;              /* keep your horizontal scroll */
   padding: 0.5rem;
-  background-color: #ffffff;
+  background: #fff;
   border: 1px solid #d8dde6;
   border-radius: 4px;
-  position: relative;
-  min-height: 100px;
 }
 
-/* Slim the table rows */
+/* Slim table */
 .attendee-table-container table {
   width: 100%;
   table-layout: auto;
   font-size: 0.75rem;
+}
+
+/* Sticky header while scrolling */
+.attendee-table-container thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
 }
 
 .attendee-table-container th,
@@ -40,10 +50,9 @@ lightning-button {
   padding: 0 0.25rem;
 }
 
-/* Spinner styling */
+/* Centered spinner */
 lightning-spinner {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
 }
