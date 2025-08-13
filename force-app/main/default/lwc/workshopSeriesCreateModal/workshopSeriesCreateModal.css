@@ -1,0 +1,7 @@
+/* Keep the modal above other UI (esp. inside record pages) */
+.slds-modal {
+  z-index: 10000;
+}
+.slds-backdrop {
+  z-index: 9999;
+}

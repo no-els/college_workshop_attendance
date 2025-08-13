@@ -1,5 +1,4 @@
 <template>
-  <lightning-input type="search" label="Search Workshops" onchange={handleInputChange}></lightning-input>
   <lightning-combobox 
     name="workshop"
     label="Select Workshop"
@@ -8,5 +7,6 @@
     onchange={handleWorkshopSelect}>
   </lightning-combobox>
   <c-workshop-tree-selector onworkshopchange={handleWorkshopSelect}></c-workshop-tree-selector>
+  <c-workshop-series-create-modal onworkshopcreated={handleWorkshopCreated}></c-workshop-series-create-modal>
 
 </template>

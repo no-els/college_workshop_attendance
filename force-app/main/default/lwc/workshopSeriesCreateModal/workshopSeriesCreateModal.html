@@ -1,0 +1,57 @@
+<template>
+  <!-- Launcher button -->
+  <lightning-button
+    label="New Workshop Series"
+    title="Create a new Workshop Series"
+    onclick={openModal}
+    variant="brand"
+  ></lightning-button>
+
+  <!-- Modal -->
+  <template if:true={isOpen}>
+    <section
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ws-modal-heading"
+      class="slds-modal slds-fade-in-open"
+    >
+      <div class="slds-modal__container">
+        <!-- Header -->
+        <header class="slds-modal__header">
+          <h2 id="ws-modal-heading" class="slds-text-heading_medium">
+            New Workshop Series
+          </h2>
+        </header>
+
+        <!-- Body -->
+        <div class="slds-modal__content slds-p-around_medium">
+          <template if:true={isSubmitting}>
+            <lightning-spinner alternative-text="Saving"></lightning-spinner>
+          </template>
+
+          <lightning-record-edit-form
+            object-api-name="Workshop_Series__c"
+            onsuccess={handleSuccess}
+            onerror={handleError}
+            onload={handleLoad}
+            data-id="form"
+          >
+            <!-- Fields: include the ones you want on create -->
+            <lightning-input-field field-name="Name" required></lightning-input-field>
+            <!-- Owner defaults to current user; include if you want to set it -->
+            <!-- <lightning-input-field field-name="OwnerId"></lightning-input-field> -->
+          </lightning-record-edit-form>
+        </div>
+
+        <!-- Footer -->
+        <footer class="slds-modal__footer slds-grid slds-grid_align-end slds-gap_small">
+          <lightning-button variant="neutral" label="Cancel" onclick={closeModal}></lightning-button>
+          <lightning-button variant="brand" label="Save" onclick={submitForm}></lightning-button>
+        </footer>
+      </div>
+    </section>
+
+    <!-- Backdrop -->
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>
