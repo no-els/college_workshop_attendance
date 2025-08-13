@@ -15,22 +15,57 @@ export default class WorkshopSeriesCreateModal extends LightningElement {
     this.isSubmitting = false;
   };
 
+  handleKeydown = (evt) => {
+    if (evt.key === 'Escape') this.closeModal();
+  };
+
+  // Compute default school year based on Aug 1 cutoff (adjust if needed)
+  get defaultSchoolYear() {
+    const today = new Date();
+    const y = today.getUTCFullYear();
+    const m = today.getUTCMonth() + 1; // 1..12
+    const start = (m >= 8) ? y : y - 1; // Aug -> next summer
+    const startYY = String(start).slice(-2).padStart(2, '0');
+    const endYY = String(start + 1).slice(-2).padStart(2, '0');
+    return `${startYY}-${endYY}`; // e.g., "24-25"
+  }
+
   submitForm = () => {
     const form = this.template.querySelector('lightning-record-edit-form[data-id="form"]');
     if (form) {
       this.isSubmitting = true;
-      // Let LDS validate required fields first:
-      form.submit();
+      form.submit(); // LDS validates required fields
     }
   };
 
   handleLoad = () => {
-    // You can prefill defaults here if needed by setting fields via querySelector on lightning-input-field
+    // Prefill School Year if empty
+    const sy = this.template.querySelector('lightning-input-field[data-id="school-year"]');
+    if (sy && (sy.value === null || sy.value === undefined || sy.value === '')) {
+      sy.value = this.defaultSchoolYear;
+    }
+  };
+
+  handleSubmit = (evt) => {
+    // Ensure School_Year__c is set even if user didn't touch it
+    const fields = evt.detail.fields;
+    if (!fields.School_Year__c) {
+      fields.School_Year__c = this.defaultSchoolYear;
+    }
+    // Optionally normalize Name (example: trim)
+    if (fields.Name && typeof fields.Name === 'string') {
+      fields.Name = fields.Name.trim();
+    }
+    // Let LDS proceed
   };
 
   handleSuccess = (evt) => {
     this.isSubmitting = false;
     const recId = evt.detail.id;
+
+    // Try to capture the values we just submitted (for parent convenience)
+    const sy = this.template.querySelector('lightning-input-field[data-id="school-year"]')?.value || this.defaultSchoolYear;
+    const name = this.template.querySelector('lightning-input-field[field-name="Name"]')?.value || null;
 
     this.dispatchEvent(
       new ShowToastEvent({
@@ -40,16 +75,16 @@ export default class WorkshopSeriesCreateModal extends LightningElement {
       })
     );
 
-    // Bubble an event in case a parent needs to refresh a list
-    this.dispatchEvent(new CustomEvent('created', { detail: { recordId: recId } }));
+    // Bubble an event so parent can refresh & auto-expand (year + series)
+    this.dispatchEvent(new CustomEvent('created', {
+      detail: { recordId: recId, schoolYear: sy, name }
+    }));
 
     this.closeModal();
   };
 
   handleError = (evt) => {
     this.isSubmitting = false;
-
-    // LDS already shows inline messages, but we’ll surface a toast too
     const msg =
       (evt?.detail?.detail || evt?.detail?.message || 'There was a problem creating the record.');
     this.dispatchEvent(

@@ -143,7 +143,93 @@ public class AttendanceWrapper {
     @AuraEnabled public String status;
 }
 
+@AuraEnabled(cacheable=true)
+    public static List<YearDTO> getYearsSeriesWorkshops() {
+        // Only include years that actually have at least one series
+        List<Workshop_Series__c> seriesRows = [
+            SELECT Id, Name, School_Year__c,
+                   (SELECT Id, Name, Date__c, Site__c, Near_Peer_Workshop__c
+                    FROM Workshops__r ORDER BY Date__c DESC)
+            FROM Workshop_Series__c
+            WHERE School_Year__c != null
+            ORDER BY School_Year__c, Name
+        ];
 
+        // Group into Year -> Series -> Workshops
+        Map<String, YearDTO> yearMap = new Map<String, YearDTO>();
+        for (Workshop_Series__c s : seriesRows) {
+            if (String.isBlank(s.School_Year__c)) continue;
 
+            YearDTO y = yearMap.get(s.School_Year__c);
+            if (y == null) {
+                y = new YearDTO();
+                y.value = s.School_Year__c;  // e.g. "24-25"
+                y.label = s.School_Year__c;
+                y.series = new List<SeriesDTO>();
+                yearMap.put(y.value, y);
+            }
 
+            SeriesDTO sd = new SeriesDTO();
+            sd.seriesId = s.Id;
+            sd.seriesName = s.Name;
+            sd.workshops = new List<WorkshopDTO>();
+
+            if (s.Workshops__r != null) {
+                for (Workshop__c w : s.Workshops__r) {
+                    sd.workshops.add(new WorkshopDTO(w));
+                }
+            }
+
+            y.series.add(sd);
+        }
+
+        // Sort years descending (25-26 before 24-25), adjust if you prefer ascending
+        List<YearDTO> out = new List<YearDTO>(yearMap.values());
+        out.sort(new YearSorter());
+        return out;
+    }
+
+    // ----- DTOs -----
+    public class YearDTO {
+        @AuraEnabled public String label;         // "24-25"
+        @AuraEnabled public String value;         // "24-25"
+        @AuraEnabled public List<SeriesDTO> series;
+    }
+
+    public class SeriesDTO {
+        @AuraEnabled public String seriesId;
+        @AuraEnabled public String seriesName;
+        @AuraEnabled public List<WorkshopDTO> workshops;
+    }
+
+    public class WorkshopDTO {
+        @AuraEnabled public String id;
+        @AuraEnabled public String name;
+        @AuraEnabled public Date   the_date;
+        @AuraEnabled public String site;
+        @AuraEnabled public Boolean nearPeer;
+
+        public WorkshopDTO(Workshop__c w) {
+            id       = w.Id;
+            name     = w.Name;
+            the_date = w.Date__c;
+            site     = String.valueOf(w.Site__c);
+            nearPeer = w.Near_Peer_Workshop__c;
+        }
+    }
+
+    // Sorter to order YearDTOs by their "value" descending (e.g., 27-28 > 26-27)
+    public class YearSorter implements System.Comparator<YearDTO> {
+        public Integer compare(YearDTO a, YearDTO b) {
+        Integer aStart = Integer.valueOf(a.value.substring(0, 2));
+        Integer bStart = Integer.valueOf(b.value.substring(0, 2));
+
+        // Descending: higher start year first (e.g., 27-28 before 26-27)
+        if (aStart == bStart) return 0;
+        return (aStart > bStart) ? -1 : 1;
+        }
+    }
 }
+
+
+

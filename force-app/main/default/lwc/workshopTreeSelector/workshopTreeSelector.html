@@ -1,27 +1,57 @@
 <template>
-  <template for:each={seriesList} for:item="series">
-    <div key={series.id} class="series-section">
-      <div class="series-header slds-p-around_x-small" data-id={series.id} onclick={toggleSeries}>
-        <span class="series-name">{series.toggleArrow} {series.name}</span>
+  <template for:each={viewYears} for:item="year">
+    <div key={year.value} class="year-section">
+      <div class="slds-p-around_x-small slds-theme_shade slds-m-vertical_x-small
+                  slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+           data-year={year.value}
+           onclick={toggleYear}>
+        <span class="slds-text-title_bold">
+          {year.arrow} {year.label}
+        </span>
+        <span class="slds-text-body_small slds-text-color_weak">
+          {year.series.length} series
+        </span>
       </div>
 
-      <template if:true={series.isExpanded}>
-        <ul class="workshop-list">
-          <template for:each={series.workshops} for:item="workshop">
-            <li 
-              key={workshop.Id}
-              data-id={workshop.Id}
-              data-name={workshop.Name}
-              data-site={workshop.Site__c}
-              data-date={workshop.Date__c}
-              data-nearpeer={workshop.Near_Peer_Workshop__c}
-              onclick={handleWorkshopClick}
-              class="workshop-item">
-              <span class="workshop-name">{workshop.Name}</span>
-              <span class="workshop-date">({workshop.Date__c})</span>
-            </li>
-          </template>
-        </ul>
+      <template if:true={year.isExpanded}>
+        <template for:each={year.series} for:item="series">
+          <div key={series.seriesId} class="series-section slds-m-left_medium">
+            <div class="series-header slds-p-around_x-small"
+                 data-series={series.seriesId}
+                 onclick={toggleSeries}>
+              <span class="series-name">
+                {series.arrow} {series.seriesName}
+              </span>
+            </div>
+
+            <template if:true={series.isExpanded}>
+              <template if:true={series.workshops.length}>
+                <ul class="workshop-list slds-m-left_large slds-m-bottom_small">
+                  <template for:each={series.workshops} for:item="workshop">
+                    <li key={workshop.id}
+                        data-id={workshop.id}
+                        data-name={workshop.name}
+                        data-site={workshop.site}
+                        data-date={workshop.the_date}
+                        data-nearpeer={workshop.nearPeer}
+                        onclick={handleWorkshopSelect}
+                        class="workshop-item slds-p-vertical_xx-small">
+                      <span class="workshop-name">{workshop.name}</span>
+                      <span class="workshop-date slds-m-left_x-small slds-text-color_weak">
+                        ({workshop.the_date})
+                      </span>
+                    </li>
+                  </template>
+                </ul>
+              </template>
+              <template if:false={series.workshops.length}>
+                <div class="slds-p-left_large slds-p-bottom_small slds-text-color_weak">
+                  No workshops yet
+                </div>
+              </template>
+            </template>
+          </div>
+        </template>
       </template>
     </div>
   </template>

@@ -47,7 +47,7 @@ export default class WorkshopSelector extends LightningElement {
   }
   
 
-  handleWorkshopSelecta(event) {
+  handleWorkshopSelect(event) {
     console.log("Workshop selected!", event.target);
     const selectedId = event.target.value;
     const selected = this.workshops.find(w => w.Id === selectedId);
