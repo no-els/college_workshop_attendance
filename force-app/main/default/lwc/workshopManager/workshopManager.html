@@ -4,7 +4,7 @@
     <p><strong>Date:</strong> {currentWorkshop.date}</p>
     <lightning-button label="Go" onclick={handleEditWorkshop} variant="brand" size="small"></lightning-button>
     <c-new-workshop-modal onworkshopcreated={refreshWorkshops}></c-new-workshop-modal>
-    <c-near-peer-toggle workshop-id={currentWorkshop.id} is-near-peer={currentWorkshop.isNearPeer}></c-near-peer-toggle>
+    <c-near-peer-toggle workshop-id={currentWorkshop.id} is-near-peer={currentWorkshop.isNearPeer} ontogglenearpeer={handleToggle}></c-near-peer-toggle>
   </div>
 
   <div class="three-col-container">
@@ -49,7 +49,7 @@
       <!-- If your <c-attendees-panel> already scrolls internally, you can leave it bare.
            If not, wrap it in a col-scroll like the middle column. -->
       <div class="col-scroll slds-scrollable_y">
-        <c-attendees-panel workshop-id={currentWorkshop.id}></c-attendees-panel>
+        <c-attendees-panel workshop-id={currentWorkshop.id} show-near-peer={currentWorkshop.isNearPeer}></c-attendees-panel>
       </div>
     </div>
   </div>

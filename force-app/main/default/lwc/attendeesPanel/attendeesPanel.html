@@ -1,15 +1,16 @@
+<!-- attendeesPanel.html -->
 <template>
   <p class="count-text">Number of attendees: {attendeesCount}</p>
-  <div 
-  class="attendees-table-container slds-scrollable_y"
-  style={containerStyle}
-  >
+
+  <div class="attendees-table-container slds-scrollable_y">
     <table class="slds-table slds-table_bordered slds-table_cell-buffer slim-table">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Action</th>
-          <th scope="col">Near Peer</th>
+          <template if:true={showNearPeer}>
+            <th scope="col">Near Peer</th>
+          </template>
           <th scope="col">Attendance</th>
         </tr>
       </thead>
@@ -18,25 +19,26 @@
           <tr key={al.Id}>
             <td>{al.Name}</td>
             <td>
-              <lightning-button 
-                label="×"
-                title="Remove"
-                variant="destructive"
-                data-id={al.Id}
-                onclick={handleRemove}
+              <lightning-button
+                label="×" title="Remove" variant="destructive"
+                data-id={al.Id} onclick={handleRemove}
                 class="slim-button">
               </lightning-button>
             </td>
-            <td>
-              <lightning-combobox
-                value={al.Near_Peer_Status__c}
-                data-id={al.Id}
-                options={statusOptions}
-                onchange={handleStatusChange}
-                variant="label-hidden"
-                class="slim-combobox">
-              </lightning-combobox>
-            </td>
+
+            <template if:true={showNearPeer}>
+              <td>
+                <lightning-combobox
+                  value={al.Near_Peer_Status__c}
+                  data-id={al.Id}
+                  options={statusOptions}
+                  onchange={handleStatusChange}
+                  variant="label-hidden"
+                  class="slim-combobox">
+                </lightning-combobox>
+              </td>
+            </template>
+
             <td>
               <lightning-combobox
                 value={al.Attendee_Status__c}

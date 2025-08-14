@@ -40,6 +40,7 @@ export default class NearPeerToggle extends LightningElement {
     const newValue = event.target.checked;
     console.log('Toggle event to:', newValue);
     this.isLoading = true;
+    this.dispatchEvent(new CustomEvent('togglenearpeer', { detail: newValue }));
 
     updateWorkshopNearPeer({ 
       workshopId: this._workshopId, 

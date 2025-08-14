@@ -11,6 +11,25 @@ export default class AttendeesPanel extends LightningElement {
   attendees = [];
   wiredResult;
   @api bottomOffset = 280;
+  @api showNearPeer; // default to false, can be set by parent component
+
+/*
+  _showNearPeer = false;
+  @api
+  get showNearPeer() { return this._showNearPeer; }
+  set showNearPeer(v) {
+    const old = this._showNearPeer;
+    this._showNearPeer = (v === true || v === 'true');
+    if (old !== this._showNearPeer) {
+      // handy debug
+      // eslint-disable-next-line no-console
+      console.log('AttendeesPanel.showNearPeer set to:', this._showNearPeer, '(raw:', v, ')');
+    }
+  }
+    */
+
+
+
   get containerStyle() {
     // Uses viewport height; adjust offset as needed or expose it from parent
     return `max-height: calc(100vh - ${this.bottomOffset}px);`;

@@ -6,6 +6,7 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
   @track currentWorkshop = {};
   @track workshopSelectorKey = 0; // key forces LWC to rerender
   @track isSidebarOpen = true;
+  @track showNearPeer = null;
   connectedCallback() {
     this.currentWorkshop = { ...workshopState };
   }
@@ -20,18 +21,30 @@ get sidebarIcon() {
   return this.isSidebarOpen ? 'utility:chevronleft' : 'utility:chevronright';
 }
 
+// Use the workshop’s value unless the user has toggled
+  get effectiveShowNearPeer() {
+    if (this.showNearPeer === null || this.showNearPeer === undefined) {
+      return !!this.currentWorkshop?.isNearPeer;
+    }
+    return this.showNearPeer;
+  }
 
-  
+
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  handleWorkshopSelect(event) {
-    setWorkshop(event.detail);
-    this.currentWorkshop = { ...event.detail }; // Update tracked state
-    console.log('Workshop selected:', this.currentWorkshop);
-  }
+  handleWorkshopSelect(e) {
+  const d = e.detail;
+  this.currentWorkshop = {
+    id: d.id,
+    name: d.name,
+    date: d.date,
+    // nearPeer might come as 'true'/'false' or boolean — normalize:
+    isNearPeer: !!(d.nearPeer ?? d.isNearPeer)
+  };
+}
 
   handleEditWorkshop() {
     this[NavigationMixin.Navigate]({
@@ -71,4 +84,9 @@ get sidebarIcon() {
     //setWorkshop(this.currentWorkshop);
   }
 
+  handleToggle(event) {
+    const newValue = !!event.detail;
+    this.currentWorkshop = { ...this.currentWorkshop, isNearPeer: newValue };
+    console.log('Near Peer ->', this.currentWorkshop.isNearPeer);
+  }
 }
