@@ -86,10 +86,12 @@ public static void addBatchAttendance(List<Map<String, String>> records) {
     Set<Id> contactIds = new Set<Id>();
     Set<Id> workshopIds = new Set<Id>();
 
-    // Collect Contact and Workshop Ids
-    for (Map<String, String> record : records) {
-        contactIds.add(record.get('ContactId'));
-        workshopIds.add(record.get('WorkshopId'));
+    // Collect Contact and Workshop Ids (cast to Id explicitly)
+    for (Map<String, String> row : records) {
+        String contactIdStr  = row.get('ContactId');
+        String workshopIdStr = row.get('WorkshopId');
+        if (String.isNotBlank(contactIdStr))  contactIds.add((Id)contactIdStr);
+        if (String.isNotBlank(workshopIdStr)) workshopIds.add((Id)workshopIdStr);
     }
 
     // Fetch contact names
@@ -100,41 +102,48 @@ public static void addBatchAttendance(List<Map<String, String>> records) {
     // Fetch existing attendees to avoid duplicates
     Set<String> existingKeys = new Set<String>();
     for (Attendee__c existing : [
-        SELECT Id, Client__c, Workshop__c 
-        FROM Attendee__c 
+        SELECT Id, Client__c, Workshop__c
+        FROM Attendee__c
         WHERE Client__c IN :contactIds AND Workshop__c IN :workshopIds
     ]) {
-        existingKeys.add(existing.Client__c + '-' + existing.Workshop__c);
+        existingKeys.add(String.valueOf(existing.Client__c) + '-' + String.valueOf(existing.Workshop__c));
     }
 
     // Build list of new attendees
-    List<Attendee__c> attendeesToInsert = new List<Attendee__c>();
+    List<Attendee__c> toInsert = new List<Attendee__c>();
 
-    for (Map<String, String> record : records) {
-        String contactId = record.get('ContactId');
-        String workshopId = record.get('WorkshopId');
-        String status = record.get('Status'); // Present, Excused Absence, etc.
-        String nearPeer = record.get('Near_Peer'); // Mentor, Mentee, N/A
+    for (Map<String, String> row : records) {
+        String contactIdStr  = row.get('ContactId');
+        String workshopIdStr = row.get('WorkshopId');
+        if (String.isBlank(contactIdStr) || String.isBlank(workshopIdStr)) continue;
 
-        String key = contactId + '-' + workshopId;
+        Id contactId  = (Id)contactIdStr;
+        Id workshopId = (Id)workshopIdStr;
+
+        String key = String.valueOf(contactId) + '-' + String.valueOf(workshopId);
         if (existingKeys.contains(key)) continue;
 
         Contact c = contactsMap.get(contactId);
         if (c == null) continue;
 
-        attendeesToInsert.add(new Attendee__c(
-            Client__c = contactId,
-            Workshop__c = workshopId,
-            Name = c.Name,
-            Attendee_Status__c = status,
-            Near_Peer_Status__c = nearPeer
+        // Normalize picklist strings (trim)
+        String status  = String.isBlank(row.get('Status'))    ? null : row.get('Status').trim();
+        String nearPeer= String.isBlank(row.get('Near_Peer')) ? null : row.get('Near_Peer').trim();
+
+        toInsert.add(new Attendee__c(
+            Client__c           = contactId,
+            Workshop__c         = workshopId,
+            Name                = c.Name,
+            Attendee_Status__c  = status,    // ensure these values exist in your picklist
+            Near_Peer_Status__c = nearPeer   // e.g., 'Mentor', 'Mentee', 'N/A'
         ));
     }
 
-    if (!attendeesToInsert.isEmpty()) {
-        insert attendeesToInsert;
+    if (!toInsert.isEmpty()) {
+        insert toInsert;
     }
 }
+
 
 
 
