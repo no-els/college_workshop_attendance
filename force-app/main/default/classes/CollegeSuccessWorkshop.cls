@@ -229,6 +229,25 @@ public class AttendanceWrapper {
         return (aStart > bStart) ? -1 : 1;
         }
     }
+
+    @AuraEnabled(cacheable=true)
+    public static Boolean getCompletedFlag(Id workshopId) {
+        Workshop__c w = [
+            SELECT Id, Completed__c
+            FROM Workshop__c
+            WHERE Id = :workshopId
+            LIMIT 1
+        ];
+        return w.Completed__c;
+    }
+
+    @AuraEnabled
+    public static void updateWorkshopCompleted(Id workshopId, Boolean completed) {
+        update new Workshop__c(
+            Id = workshopId,
+            Completed__c = completed
+        );
+    }
 }
 
 

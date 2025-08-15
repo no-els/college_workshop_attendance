@@ -13,6 +13,12 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
    get sidebarClass() {
     return this.isSidebarOpen ? 'sidebar open' : 'sidebar collapsed';
   }
+   // Color the banner based on completion
+  get bannerClass() {
+    const base = 'workshop-banner';
+    return this.currentWorkshop?.completed ? `${base} is-completed` : base;
+  }
+
 
   get sidebarToggleLabel() {
   return this.isSidebarOpen ? '«' : '»';
@@ -42,7 +48,8 @@ get sidebarIcon() {
     name: d.name,
     date: d.date,
     // nearPeer might come as 'true'/'false' or boolean — normalize:
-    isNearPeer: !!(d.nearPeer ?? d.isNearPeer)
+    isNearPeer: !!(d.nearPeer ?? d.isNearPeer),
+    completed: !!(d.completed ?? d.isCompleted)
   };
 }
 
@@ -88,5 +95,12 @@ get sidebarIcon() {
     const newValue = !!event.detail;
     this.currentWorkshop = { ...this.currentWorkshop, isNearPeer: newValue };
     console.log('Near Peer ->', this.currentWorkshop.isNearPeer);
+  }
+
+  handleToggleCompleted(e) {
+    // keep manager state in sync with child (optimistic already applied)
+    const { value } = e.detail || {};
+    this.currentWorkshop = { ...this.currentWorkshop, completed: !!value };
+    // If you also want to ping other panels, do it here.
   }
 }

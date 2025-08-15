@@ -5,6 +5,10 @@
     <lightning-button label="Go" onclick={handleEditWorkshop} variant="brand" size="small"></lightning-button>
     <c-new-workshop-modal onworkshopcreated={refreshWorkshops}></c-new-workshop-modal>
     <c-near-peer-toggle workshop-id={currentWorkshop.id} is-near-peer={currentWorkshop.isNearPeer} ontogglenearpeer={handleToggle}></c-near-peer-toggle>
+    <c-workshop-completed-toggle
+    workshop-id={currentWorkshop.id}
+    ontogglecompleted={handleToggleCompleted}>
+  </c-workshop-completed-toggle>
   </div>
 
   <div class="three-col-container">

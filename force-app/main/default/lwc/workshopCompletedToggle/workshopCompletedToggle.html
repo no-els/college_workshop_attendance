@@ -1,0 +1,15 @@
+<template>
+  <div class="completed-toggle-inline">
+    <lightning-input
+      type="toggle"
+      label="Completed"
+      checked={isCompleted}
+      onchange={handleToggle}
+      disabled={isDisabled}>
+    </lightning-input>
+
+    <template if:true={isLoading}>
+      <lightning-spinner size="small" alternative-text="Loading"></lightning-spinner>
+    </template>
+  </div>
+</template>
