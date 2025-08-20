@@ -47,7 +47,7 @@ export default class AttendeesPanel extends LightningElement {
 } else if (value.error) {
       console.error('Error loading attendees:', value.error);
     }
-    console.log('Fetched attendees:', JSON.stringify(value.data, null, 2));
+    //console.log('Fetched attendees:', JSON.stringify(value.data, null, 2));
 
   }
 

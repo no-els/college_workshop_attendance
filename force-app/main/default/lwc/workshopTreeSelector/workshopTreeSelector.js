@@ -61,7 +61,9 @@ export default class WorkshopTreeSelector extends LightningElement {
         date: d.date || null,
         nearPeer: d.nearpeer === 'true' || d.nearpeer === true
       });
+      console.log("near peer status from workshop selector", d.nearpeer);
       return;
+      
     }
     if (event.target && event.target.value) {
       const selectedId = event.target.value;

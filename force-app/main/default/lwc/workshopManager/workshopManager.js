@@ -1,6 +1,7 @@
 import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { workshopState, setWorkshop } from 'c/workshopService';
+import getWorkshopById from '@salesforce/apex/CollegeSuccessWorkshop.getWorkshopById';
 
 export default class WorkshopManager extends NavigationMixin(LightningElement) {
   @track currentWorkshop = {};
@@ -41,17 +42,29 @@ get sidebarIcon() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  handleWorkshopSelect(e) {
-  const d = e.detail;
-  this.currentWorkshop = {
-    id: d.id,
-    name: d.name,
-    date: d.date,
-    // nearPeer might come as 'true'/'false' or boolean — normalize:
-    isNearPeer: !!(d.nearPeer ?? d.isNearPeer),
-    completed: !!(d.completed ?? d.isCompleted)
-  };
+  async handleWorkshopSelect(e) {
+  const d = e.detail;   // what you clicked from the tree
+  try {
+    const w = await getWorkshopById({ workshopId: d.id }); // pull fresh from Apex
+
+    this.currentWorkshop = {
+      id: w.Id,
+      name: w.Name,
+      date: w.Date__c,
+      site: w.Site__c,
+      isNearPeer: w.Near_Peer_Workshop__c,
+      completed: w.Completed__c,
+      program: w.Program__c
+    };
+
+    this.showNearPeer = w.Near_Peer_Workshop__c;
+    console.log('Loaded from Apex:', this.currentWorkshop);
+
+  } catch (err) {
+    console.error('Error fetching workshop:', err);
+  }
 }
+
 
   handleEditWorkshop() {
     this[NavigationMixin.Navigate]({

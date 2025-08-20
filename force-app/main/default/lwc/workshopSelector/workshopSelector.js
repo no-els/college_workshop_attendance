@@ -47,7 +47,7 @@ export default class WorkshopSelector extends LightningElement {
   }
   
 
-  handleWorkshopSelect(event) {
+  handleWorkshopSelecta(event) {
     console.log("Workshop selected!", event.target);
     const selectedId = event.target.value;
     const selected = this.workshops.find(w => w.Id === selectedId);
@@ -76,9 +76,11 @@ export default class WorkshopSelector extends LightningElement {
         name: selected.name,
         site: selected.site, // Optional
         date: selected.date,
-        nearPeer: selected.nearPeer
+        nearPeer: selected.nearpeer
       }
     }));
+
+    console.log(selected.nearpeer, "near peer value from workshop selector");
   }
   // If event came from lightning-combobox
   else if (event.target && event.target.value) {

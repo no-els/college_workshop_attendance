@@ -2,7 +2,7 @@
 import { LightningElement, wire, api, track } from 'lwc';
 import { loadScript } from 'lightning/platformResourceLoader';
 import { refreshApex } from '@salesforce/apex';
-import addAttendee from '@salesforce/apex/WorkshopController.addAttendee';
+import addAttendee from '@salesforce/apex/CollegeSuccessWorkshop.addAttendee';
 import FUSE_RESOURCE from '@salesforce/resourceUrl/fuse';
 import { initFuse, search } from 'c/contactSearchService';
 import getContactsAll from '@salesforce/apex/CollegeSuccessWorkshop.getContactsAll';

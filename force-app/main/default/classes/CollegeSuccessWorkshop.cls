@@ -1,9 +1,13 @@
 public with sharing class CollegeSuccessWorkshop {
     @AuraEnabled(cacheable=true)
-    public static List<Contact> getContactsAll() {
-        // Remove non-numeric characters from the query
-        return [SELECT Id, Name, Phone, Site__c, Site_2__c FROM Contact];
-    }
+public static List<Contact> getContactsAll() {
+    return [
+        SELECT Id, Name, Phone, Site__c, Site_2__c
+        FROM Contact
+        WHERE RecordType.DeveloperName IN ('Student', 'Parent')
+    ];
+}
+
     @AuraEnabled(cacheable=true)
     public static List<Workshop__c> searchWorkshops(String searchTerm) {
         String query = '%' + searchTerm + '%';
@@ -134,7 +138,7 @@ public static void addBatchAttendance(List<Map<String, String>> records) {
             Client__c           = contactId,
             Workshop__c         = workshopId,
             Name                = c.Name,
-            Attendee_Status__c  = status,    // ensure these values exist in your picklist
+            Attendee_Status__c  = 'Present',    // ensure these values exist in your picklist
             Near_Peer_Status__c = nearPeer   // e.g., 'Mentor', 'Mentee', 'N/A'
         ));
     }
@@ -153,50 +157,60 @@ public class AttendanceWrapper {
 }
 
 @AuraEnabled(cacheable=true)
-    public static List<YearDTO> getYearsSeriesWorkshops() {
-        // Only include years that actually have at least one series
-        List<Workshop_Series__c> seriesRows = [
-            SELECT Id, Name, School_Year__c,
-                   (SELECT Id, Name, Date__c, Site__c, Near_Peer_Workshop__c
-                    FROM Workshops__r ORDER BY Date__c DESC)
-            FROM Workshop_Series__c
-            WHERE School_Year__c != null
-            ORDER BY School_Year__c, Name
-        ];
+public static List<YearDTO> getYearsSeriesWorkshops() {
+    // 0) Who can see which Program__c values?
+    Set<String> allowed = new Set<String>(MgSecurity.getAllowedPrograms());
+    if (allowed.isEmpty()) return new List<YearDTO>();
 
-        // Group into Year -> Series -> Workshops
-        Map<String, YearDTO> yearMap = new Map<String, YearDTO>();
-        for (Workshop_Series__c s : seriesRows) {
-            if (String.isBlank(s.School_Year__c)) continue;
+    // 1) Pull series, but only bring back child Workshops whose Program__c is allowed
+    List<Workshop_Series__c> seriesRows = [
+        SELECT Id, Name, School_Year__c,
+               (SELECT Id, Name, Date__c, Site__c, Near_Peer_Workshop__c, Program__c
+                FROM Workshops__r
+                WHERE Program__c IN :allowed
+                ORDER BY Date__c DESC)
+        FROM Workshop_Series__c
+        WHERE School_Year__c != null
+        ORDER BY School_Year__c, Name
+    ];
 
-            YearDTO y = yearMap.get(s.School_Year__c);
-            if (y == null) {
-                y = new YearDTO();
-                y.value = s.School_Year__c;  // e.g. "24-25"
-                y.label = s.School_Year__c;
-                y.series = new List<SeriesDTO>();
-                yearMap.put(y.value, y);
-            }
+    // 2) Group into Year -> Series -> Workshops (skip empty series)
+    Map<String, YearDTO> yearMap = new Map<String, YearDTO>();
 
-            SeriesDTO sd = new SeriesDTO();
-            sd.seriesId = s.Id;
-            sd.seriesName = s.Name;
-            sd.workshops = new List<WorkshopDTO>();
+    for (Workshop_Series__c s : seriesRows) {
+        if (String.isBlank(s.School_Year__c)) continue;
 
-            if (s.Workshops__r != null) {
-                for (Workshop__c w : s.Workshops__r) {
-                    sd.workshops.add(new WorkshopDTO(w));
-                }
-            }
+        // skip series that have 0 visible workshops after the filter
+        if (s.Workshops__r == null || s.Workshops__r.isEmpty()) continue;
 
-            y.series.add(sd);
+        YearDTO y = yearMap.get(s.School_Year__c);
+        if (y == null) {
+            y = new YearDTO();
+            y.value = s.School_Year__c;  // e.g. "24-25"
+            y.label = s.School_Year__c;
+            y.series = new List<SeriesDTO>();
+            yearMap.put(y.value, y);
         }
 
-        // Sort years descending (25-26 before 24-25), adjust if you prefer ascending
-        List<YearDTO> out = new List<YearDTO>(yearMap.values());
-        out.sort(new YearSorter());
-        return out;
+        SeriesDTO sd = new SeriesDTO();
+        sd.seriesId = s.Id;
+        sd.seriesName = s.Name;
+        sd.workshops = new List<WorkshopDTO>();
+
+        for (Workshop__c w : s.Workshops__r) {
+            sd.workshops.add(new WorkshopDTO(w));
+        }
+
+        // (defensive) only add if we actually have workshops
+        if (!sd.workshops.isEmpty()) y.series.add(sd);
     }
+
+    // 3) Sort years desc
+    List<YearDTO> out = new List<YearDTO>(yearMap.values());
+    out.sort(new YearSorter());
+    return out;
+}
+
 
     // ----- DTOs -----
     public class YearDTO {
@@ -257,7 +271,41 @@ public class AttendanceWrapper {
             Completed__c = completed
         );
     }
+
+
+    @AuraEnabled
+    public static Boolean addAttendee(String contactId, String workshopId){
+        // Check if this attendee already exists
+        List<Attendee__c> existing = [SELECT Id FROM Attendee__c 
+        WHERE Client__c = :contactId 
+        AND Workshop__c = :workshopId 
+        LIMIT 1];
+        // Fetch Contact Name
+        Contact c = [SELECT Name FROM Contact WHERE Id = :contactId LIMIT 1];
+
+        if (!existing.isEmpty()) {
+        return False;
+        }
+        Attendee__c newAttendee = new Attendee__c(
+            Client__c = contactId,
+            Workshop__c = workshopId,
+            Name = c.name,
+            Attendee_Status__c = 'Present' // ensure these values exist in your picklist
+        );
+        insert newAttendee;
+        return True;
+    }
+
+    @AuraEnabled
+    public static Workshop__c getWorkshopById(Id workshopId) {
+
+        Workshop__c w = [
+            SELECT Id, Name, Completed__c, Date__c, Site__c,
+                   Near_Peer_Workshop__c, Program__c
+            FROM Workshop__c
+            WHERE Id = :workshopId
+            LIMIT 1
+        ];
+        return w;   
+    }
 }
-
-
-
