@@ -1,0 +1,15 @@
+<template>
+  <div class="near-peer-toggle-inline">
+  <lightning-input 
+    type="toggle"
+    label="Show Date"
+    checked={isShowDate}
+    onchange={handleToggle}
+    disabled={isLoading}>
+  </lightning-input>
+  <template if:true={isLoading}>
+    <lightning-spinner size="small" alternative-text="Loading"></lightning-spinner>
+  </template>
+</div>
+
+</template>

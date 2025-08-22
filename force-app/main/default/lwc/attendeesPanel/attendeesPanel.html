@@ -11,6 +11,13 @@
           <template if:true={showNearPeer}>
             <th scope="col">Near Peer</th>
           </template>
+
+          <!-- NEW: Date header when showDate is true -->
+        <template if:true={showDate}>
+            <th scope="col">Date</th>
+          </template>
+
+
           <th scope="col">Attendance</th>
         </tr>
       </thead>
@@ -38,6 +45,23 @@
                 </lightning-combobox>
               </td>
             </template>
+
+            <!-- NEW: Date cell -->
+                <template if:true={showDate}>
+                  <td class="date-cell">
+                    <lightning-input
+                      type="date"
+                      value={al.Date__c}
+                      data-id={al.Id}
+                      onchange={handleDateChange}
+                      disabled={al._saving}>
+                    </lightning-input>
+
+                    <template if:true={al._saving}>
+                      <lightning-spinner size="x-small" alternative-text="Saving"></lightning-spinner>
+                    </template>
+                  </td>
+               </template>
 
             <td>
               <lightning-combobox

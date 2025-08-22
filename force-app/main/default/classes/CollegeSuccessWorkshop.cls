@@ -49,7 +49,8 @@ public static void updateAttendeeAttendance(String attendeeId, String attendance
             Client__r.Phone, 
             Client__r.Site__c, 
             Near_Peer_Status__c,
-            Attendee_Status__c
+            Attendee_Status__c,
+            Date__c
             FROM Attendee__c WHERE Workshop__c = :workshopId order by CreatedDate asc];
         } catch (Exception e) {
             throw new AuraHandledException('Error: ' + e.getMessage());
@@ -253,7 +254,7 @@ public static List<YearDTO> getYearsSeriesWorkshops() {
         }
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static Boolean getCompletedFlag(Id workshopId) {
         Workshop__c w = [
             SELECT Id, Completed__c
@@ -301,7 +302,7 @@ public static List<YearDTO> getYearsSeriesWorkshops() {
 
         Workshop__c w = [
             SELECT Id, Name, Completed__c, Date__c, Site__c,
-                   Near_Peer_Workshop__c, Program__c
+                   Near_Peer_Workshop__c, Program__c, Show_Date__c
             FROM Workshop__c
             WHERE Id = :workshopId
             LIMIT 1

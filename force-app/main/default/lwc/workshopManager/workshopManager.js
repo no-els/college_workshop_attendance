@@ -8,6 +8,8 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
   @track workshopSelectorKey = 0; // key forces LWC to rerender
   @track isSidebarOpen = true;
   @track showNearPeer = null;
+  @track showDate = null;
+  @track completed = null;
   connectedCallback() {
     this.currentWorkshop = { ...workshopState };
   }
@@ -44,6 +46,7 @@ get sidebarIcon() {
 
   async handleWorkshopSelect(e) {
   const d = e.detail;   // what you clicked from the tree
+  console.log("Selecting workshop:", d);
   try {
     const w = await getWorkshopById({ workshopId: d.id }); // pull fresh from Apex
 
@@ -54,11 +57,11 @@ get sidebarIcon() {
       site: w.Site__c,
       isNearPeer: w.Near_Peer_Workshop__c,
       completed: w.Completed__c,
-      program: w.Program__c
+      program: w.Program__c,
+      showDate: w.Show_Date__c 
     };
-
-    this.showNearPeer = w.Near_Peer_Workshop__c;
-    console.log('Loaded from Apex:', this.currentWorkshop);
+    console.log("date here", this.currentWorkshop.showDate);
+    console.log("near peer here", this.isNearPeer);
 
   } catch (err) {
     console.error('Error fetching workshop:', err);
@@ -108,12 +111,42 @@ get sidebarIcon() {
     const newValue = !!event.detail;
     this.currentWorkshop = { ...this.currentWorkshop, isNearPeer: newValue };
     console.log('Near Peer ->', this.currentWorkshop.isNearPeer);
+    this.workshopSelectorKey += 1;
   }
 
   handleToggleCompleted(e) {
-    // keep manager state in sync with child (optimistic already applied)
-    const { value } = e.detail || {};
-    this.currentWorkshop = { ...this.currentWorkshop, completed: !!value };
-    // If you also want to ping other panels, do it here.
-  }
+  const value = !!e.detail;
+  this.currentWorkshop = { ...this.currentWorkshop, completed: value };
+  this.workshopSelectorKey += 1;
+   this.reloadCurrentWorkshop();  
+   
+}
+
+
+  handleToggleDate(event) {
+  const newValue = !!event.detail;
+  this.currentWorkshop = { ...this.currentWorkshop, showDate: newValue };
+  this.workshopSelectorKey += 1;
+  console.log(this.currentWorkshop.showDate, "from workshop manager showdate");
+}
+
+
+// parent (WorkshopManager.js)
+async reloadCurrentWorkshop() {
+  if (!this.currentWorkshop?.id) return;
+  const w = await getWorkshopById({ workshopId: this.currentWorkshop.id });
+  this.currentWorkshop = {
+    id: w.Id,
+    name: w.Name,
+    date: w.Date__c,
+    site: w.Site__c,
+    isNearPeer: w.Near_Peer_Workshop__c,
+    completed: w.Completed__c,
+    program: w.Program__c,
+    showDate: w.Show_Date__c
+  };
+  //this.template.querySelector('c-workshop-completed-toggle')?.refresh();
+}
+
+
 }

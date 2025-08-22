@@ -6,35 +6,34 @@ import updateWorkshopCompleted from '@salesforce/apex/CollegeSuccessWorkshop.upd
 export default class WorkshopCompletedToggle extends LightningElement {
   @track isCompleted = false;
   @track isLoading = false;
+  _workshopId;
+  _reqSeq = 0; // guard against out-of-order returns
   error;
 
-  _workshopId;
   @api
-  get workshopId() {
-    return this._workshopId;
-  }
+  get workshopId() { return this._workshopId; }
   set workshopId(value) {
     this._workshopId = value;
-    this.fetchFlag(); // refresh whenever parent changes selected workshop
+    this.refresh();              // auto fetch on id change
   }
 
-  async fetchFlag() {
+  @api
+  async refresh() {              // parent can call this, too
+    const seq = ++this._reqSeq;
+    await this.fetchFlag(seq);
+  }
+
+  async fetchFlag(seq) {
     if (!this._workshopId) return;
     this.isLoading = true;
     try {
       const result = await getCompletedFlag({ workshopId: this._workshopId });
+      if (seq !== this._reqSeq) return;   // ignore stale response
       this.isCompleted = !!result;
-      this.error = null;
-
-      // Optional: let parent know current state (uncomment if you want initial sync)
-      // this.fireChange(this.isCompleted);
     } catch (e) {
-      this.error = e;
-      // eslint-disable-next-line no-console
-      console.error('Error fetching completed flag:', e);
-      this.toast('Error', this.normalizeError(e), 'error');
+      if (seq === this._reqSeq) console.error('Error fetching completed flag:', e);
     } finally {
-      this.isLoading = false;
+      if (seq === this._reqSeq) this.isLoading = false;
     }
   }
 
