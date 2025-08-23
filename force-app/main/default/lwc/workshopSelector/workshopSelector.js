@@ -22,7 +22,7 @@ export default class WorkshopSelector extends LightningElement {
 
   handleInputChange(event) {
     this.searchTerm = event.target.value;
-    debounce(this.performSearch.bind(this), 300)();
+    debounce(this.performSearch.bind(this), 600)();
   }
 
   performSearch() {
