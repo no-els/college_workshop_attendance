@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ApexTrigger xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>64.0</apiVersion>
-    <description>Trigger to update workshop completion status when attendance records change</description>
-    <status>Active</status>
-</ApexTrigger>
