@@ -1,4 +1,19 @@
 <template>
   <c-contact-search-input onsearchtermchange={handleSearchTermChange}></c-contact-search-input>
-  <c-attendee-table contacts={filteredContacts} onselect={handleClick}></c-attendee-table>
+  
+  <!-- Site filter for PPP users -->
+  <template if:true={showPPP}>
+    <div class="slds-m-bottom_small">
+      <lightning-combobox
+        name="siteFilter"
+        label="Filter by Site"
+        value={selectedSiteFilter}
+        options={siteOptions}
+        onchange={handleSiteFilterContactChange}
+        placeholder="All Sites">
+      </lightning-combobox>
+    </div>
+  </template>
+  
+  <c-attendee-table contacts={filteredContacts} config={config} onselect={handleClick}></c-attendee-table>
 </template>

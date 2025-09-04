@@ -4,7 +4,11 @@ import { refreshApex } from '@salesforce/apex';
 
 export default class AttendeeTable extends LightningElement {
   @api contacts;
+  @api config;
   @track isLoading = false; // 🌀 NEW: loading state
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   handleClick(event) {
     const contactId = event.target.dataset.id;

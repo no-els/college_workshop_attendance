@@ -19,6 +19,21 @@ export default class PossibleAttendeesPanel extends LightningElement {
   
   get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
   get showPPP() { return this.config?.showPPP; }
+  
+  get siteOptions() {
+    const sites = new Set();
+    this.allContacts.forEach(contact => {
+      if (contact.Site__c) sites.add(contact.Site__c);
+      if (contact.Site_2__c) sites.add(contact.Site_2__c);
+    });
+    
+    const options = [{ label: 'All Sites', value: 'All Sites' }];
+    Array.from(sites).sort().forEach(site => {
+      options.push({ label: site, value: site });
+    });
+    
+    return options;
+  }
 
   @wire(getContactsAll)
   wiredContacts(result) {

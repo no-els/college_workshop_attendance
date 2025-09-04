@@ -9,6 +9,11 @@
         <thead>
           <tr class="slds-text-title_caps">
             <th scope="col">Attendee Name</th>
+            <template if:true={showPPP}>
+              <th scope="col">Site 1</th>
+              <th scope="col">Site 2</th>
+              <th scope="col">Phone</th>
+            </template>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -16,6 +21,11 @@
           <template for:each={contacts} for:item="pattendee">
             <tr key={pattendee.Id}>
               <td>{pattendee.Name}</td>
+              <template if:true={showPPP}>
+                <td>{pattendee.Site__c}</td>
+                <td>{pattendee.Site_2__c}</td>
+                <td>{pattendee.Phone}</td>
+              </template>
               <td>
                 <lightning-button 
                   label="Select" 
