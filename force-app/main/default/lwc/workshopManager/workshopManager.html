@@ -1,5 +1,5 @@
 <template>
-  <div class="workshop-banner">
+  <div class="workshop-banner" if:true={showCollegeSuccess}>
     <h1>{currentWorkshop.name}</h1>
     <p><strong>Date:</strong> {currentWorkshop.date}</p>
     <lightning-button label="Go" onclick={handleEditWorkshop} variant="brand" size="small"></lightning-button>

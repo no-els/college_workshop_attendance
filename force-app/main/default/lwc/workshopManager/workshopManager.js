@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api} from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { workshopState, setWorkshop } from 'c/workshopService';
 import getWorkshopById from '@salesforce/apex/CollegeSuccessWorkshop.getWorkshopById';
@@ -10,6 +10,10 @@ export default class WorkshopManager extends NavigationMixin(LightningElement) {
   @track showNearPeer = null;
   @track showDate = null;
   @track completed = null;
+  @api config;
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP()            { return this.config?.showPPP; }
+
   connectedCallback() {
     this.currentWorkshop = { ...workshopState };
   }

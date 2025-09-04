@@ -1,11 +1,11 @@
 <template>
   <lightning-tabset active-tab-value={activeTab} onactive={handleTabChange}>
     <lightning-tab label="Workshops" value="workshops">
-      <c-workshop-manager></c-workshop-manager>
+      <c-workshop-manager config={config}></c-workshop-manager>
     </lightning-tab>
 
     <lightning-tab label="Cohorts" value="cohorts">
-      <c-cohort-manager></c-cohort-manager>
+      <c-cohort-manager config={config}></c-cohort-manager>
     </lightning-tab>
 
     <!-- Optional future tabs -->
