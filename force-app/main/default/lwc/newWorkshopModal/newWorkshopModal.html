@@ -28,7 +28,9 @@
                         <lightning-input-field field-name="Name"></lightning-input-field>
                         <lightning-input-field field-name="Date__c"></lightning-input-field>
                         <lightning-input-field field-name="Workshop_Series__c"></lightning-input-field>
-                        <lightning-input-field field-name="Program__c" value={defaultProgram}></lightning-input-field>
+                        
+                        <!-- Program field hidden - set automatically in background -->
+                        <lightning-input-field field-name="Program__c" value={defaultProgram} class="slds-hide"></lightning-input-field>
                         
                         <!-- Site field for PPP users -->
                         <template if:true={showPPP}>
