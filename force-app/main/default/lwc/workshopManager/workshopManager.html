@@ -53,11 +53,13 @@
     <div class="col">
       <!-- NEW: scroll area for the middle column -->
       <div class="col-scroll slds-scrollable_y">
-        <c-batch-attendance-from-cohort
-          workshop-id={currentWorkshop.id}
-          config={config}
-          onrefreshattendees={handleRefreshAttendees}>
-        </c-batch-attendance-from-cohort>
+        <template if:false={showPPP}>
+          <c-batch-attendance-from-cohort
+            workshop-id={currentWorkshop.id}
+            config={config}
+            onrefreshattendees={handleRefreshAttendees}>
+          </c-batch-attendance-from-cohort>
+        </template>
 
         <c-possible-attendees-panel 
           selected-workshop-id={currentWorkshop.id}

@@ -21,6 +21,15 @@ export default class AttendeesPanel extends LightningElement {
   
   get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
   get showPPP() { return this.config?.showPPP; }
+  
+  // Override showNearPeer and showDate to be false when PPP is active
+  get effectiveShowNearPeer() { 
+    return this.showNearPeer && !this.showPPP; 
+  }
+  
+  get effectiveShowDate() { 
+    return this.showDate && !this.showPPP; 
+  }
 
   attendees = [];
   wiredResult;

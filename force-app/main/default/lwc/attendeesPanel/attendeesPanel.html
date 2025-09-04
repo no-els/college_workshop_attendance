@@ -8,12 +8,12 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Action</th>
-          <template if:true={showNearPeer}>
+          <template if:true={effectiveShowNearPeer}>
             <th scope="col">Near Peer</th>
           </template>
 
           <!-- NEW: Date header when showDate is true -->
-        <template if:true={showDate}>
+        <template if:true={effectiveShowDate}>
             <th scope="col">Date</th>
           </template>
 
@@ -33,7 +33,7 @@
               </lightning-button>
             </td>
 
-            <template if:true={showNearPeer}>
+            <template if:true={effectiveShowNearPeer}>
               <td>
                 <lightning-combobox
                   value={al.Near_Peer_Status__c}
@@ -47,7 +47,7 @@
             </template>
 
             <!-- NEW: Date cell -->
-                <template if:true={showDate}>
+                <template if:true={effectiveShowDate}>
                   <td class="date-cell">
                     <lightning-input
                       type="date"
