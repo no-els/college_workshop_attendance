@@ -1,4 +1,4 @@
-import { LightningElement, track, wire } from 'lwc';
+import { LightningElement, track, wire, api } from 'lwc';
 import getCohorts from '@salesforce/apex/CohortController.getCohorts';
 import { refreshApex } from '@salesforce/apex';
 import deleteCohort from '@salesforce/apex/CohortController.deleteCohort';

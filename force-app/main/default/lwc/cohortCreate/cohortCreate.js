@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import createCohort from '@salesforce/apex/CohortController.createCohort';
 
 export default class CohortCreate extends LightningElement {

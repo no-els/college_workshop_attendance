@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import searchWorkshops from '@salesforce/apex/CollegeSuccessWorkshop.searchWorkshops';
 import { debounce } from 'c/utils';
 
