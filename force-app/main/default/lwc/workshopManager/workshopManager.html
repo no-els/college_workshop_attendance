@@ -8,17 +8,20 @@
     <c-near-peer-toggle 
     workshop-id={currentWorkshop.id}
     is-near-peer={currentWorkshop.isNearPeer}
+    config={config}
     ontogglenearpeer={handleToggle}>
     </c-near-peer-toggle>
 
     <c-workshop-completed-toggle
     workshop-id={currentWorkshop.id}
+    config={config}
     ontogglecompleted={handleToggleCompleted}
     completed={currentWorkshop.completed}>
   </c-workshop-completed-toggle>
 
     <c-show-date-toggle
     workshop-id={currentWorkshop.id}
+    config={config}
     ontoggledate={handleToggleDate}>
     </c-show-date-toggle>
 
@@ -39,7 +42,8 @@
         <template if:true={isSidebarOpen}>
           <c-workshop-selector 
             onworkshopchange={handleWorkshopSelect}
-            onsitefilterchange={handleSiteFilterChange}>
+            onsitefilterchange={handleSiteFilterChange}
+            config={config}>
           </c-workshop-selector>
         </template>
       </div>
@@ -51,11 +55,13 @@
       <div class="col-scroll slds-scrollable_y">
         <c-batch-attendance-from-cohort
           workshop-id={currentWorkshop.id}
+          config={config}
           onrefreshattendees={handleRefreshAttendees}>
         </c-batch-attendance-from-cohort>
 
         <c-possible-attendees-panel 
           selected-workshop-id={currentWorkshop.id}
+          config={config}
           onrefreshattendees={handleRefreshAttendees}>
         </c-possible-attendees-panel>
       </div>
@@ -66,7 +72,7 @@
       <!-- If your <c-attendees-panel> already scrolls internally, you can leave it bare.
            If not, wrap it in a col-scroll like the middle column. -->
       <div class="col-scroll slds-scrollable_y">
-        <c-attendees-panel workshop-id={currentWorkshop.id} show-near-peer={currentWorkshop.isNearPeer} show-date={currentWorkshop.showDate}></c-attendees-panel>
+        <c-attendees-panel workshop-id={currentWorkshop.id} show-near-peer={currentWorkshop.isNearPeer} show-date={currentWorkshop.showDate} config={config}></c-attendees-panel>
       </div>
     </div>
   </div>

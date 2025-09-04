@@ -5,9 +5,13 @@ import { debounce } from 'c/utils';
 
 
 export default class WorkshopSelector extends LightningElement {
+  @api config;
   workshops = [];
   selectedSiteFilter = 'All Sites';
   searchTerm = '';
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   connectedCallback() {
     this.performSearch();

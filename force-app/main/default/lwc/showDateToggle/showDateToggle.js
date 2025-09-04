@@ -3,9 +3,13 @@ import getShowDateFlag from '@salesforce/apex/AttendeeDateController.getShowDate
 import updateShowDateFlag from '@salesforce/apex/AttendeeDateController.updateShowDateFlag';
 
 export default class showDateToggle extends LightningElement {
+  @api config;
   @api isShowDate;
   @track isLoading = false;
   error;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   _workshopId;
 

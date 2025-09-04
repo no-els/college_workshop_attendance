@@ -9,12 +9,16 @@ import getContactsAll from '@salesforce/apex/CollegeSuccessWorkshop.getContactsA
 
 export default class PossibleAttendeesPanel extends LightningElement {
   @api selectedWorkshopId;
+  @api config;
   @track filteredContacts = [];
   allContacts = [];
   wiredContactsResult;
   fuseLoaded = false;
   selectedSiteFilter = 'All Sites';
   searchTerm = '';
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   @wire(getContactsAll)
   wiredContacts(result) {

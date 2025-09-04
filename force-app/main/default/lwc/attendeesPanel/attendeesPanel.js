@@ -17,6 +17,10 @@ export default class AttendeesPanel extends LightningElement {
   // From parent banner
   @api showNearPeer; // boolean
   @api showDate; // boolean
+  @api config;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   attendees = [];
   wiredResult;

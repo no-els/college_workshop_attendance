@@ -5,9 +5,13 @@ import addBatchAttendance from '@salesforce/apex/CollegeSuccessWorkshop.addBatch
 
 export default class BatchAttendanceFromCohort extends LightningElement {
   @api workshopId;
+  @api config;
   @track cohortOptions = [];
   @track selectedCohortId;
   members = [];
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   connectedCallback() {
     getCohorts()

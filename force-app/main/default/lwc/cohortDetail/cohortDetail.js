@@ -5,12 +5,16 @@ import deleteMember from '@salesforce/apex/CohortController.deleteMember';
 
 export default class CohortDetail extends LightningElement {
   @api cohortId;
+  @api config;
 
   @track cohort;
   @track members = [];
   @track error;
   wiredCohortDetail;
   @track isLoading = false;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
 
   @wire(getCohortDetails, { cohortId: '$cohortId' })

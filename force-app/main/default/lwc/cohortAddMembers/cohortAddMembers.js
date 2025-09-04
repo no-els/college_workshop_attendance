@@ -7,9 +7,13 @@ import addMembers from '@salesforce/apex/CohortController.addMembers';
 
 export default class CohortAddMembers extends LightningElement {
   @api cohortId;
+  @api config;
   @track searchTerm = '';
   @track filteredContacts = [];
   @track loading = false;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   allContacts = [];
   fuseLoaded = false;

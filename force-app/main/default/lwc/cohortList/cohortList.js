@@ -2,6 +2,10 @@ import { LightningElement, api } from 'lwc';
 
 export default class CohortList extends LightningElement {
   @api cohorts = [];
+  @api config;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   handleSelect(event) {
     const cohortId = event.target.dataset.id;

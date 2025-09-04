@@ -2,7 +2,11 @@ import { LightningElement, track } from 'lwc';
 import createCohort from '@salesforce/apex/CohortController.createCohort';
 
 export default class CohortCreate extends LightningElement {
+  @api config;
   @track name = '';
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   handleNameChange(e) {
     this.name = e.target.value;

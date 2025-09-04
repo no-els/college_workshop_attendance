@@ -4,11 +4,15 @@ import getCompletedFlag from '@salesforce/apex/CollegeSuccessWorkshop.getComplet
 import updateWorkshopCompleted from '@salesforce/apex/CollegeSuccessWorkshop.updateWorkshopCompleted';
 
 export default class WorkshopCompletedToggle extends LightningElement {
+  @api config;
   @track isCompleted = false;
   @track isLoading = false;
   _workshopId;
   _reqSeq = 0; // guard against out-of-order returns
   error;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   @api
   get workshopId() { return this._workshopId; }

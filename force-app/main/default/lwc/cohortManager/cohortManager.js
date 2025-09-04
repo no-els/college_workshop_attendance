@@ -7,6 +7,10 @@ export default class CohortManager extends LightningElement {
   @track cohorts = [];
   @track selectedCohortId;
   wiredCohortsResult;
+  @api config;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   @wire(getCohorts)
   wiredCohorts(result) {

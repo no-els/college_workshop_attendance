@@ -3,9 +3,13 @@ import getNearPeerFlag from '@salesforce/apex/CollegeSuccessWorkshop.getNearPeer
 import updateWorkshopNearPeer from '@salesforce/apex/CollegeSuccessWorkshop.updateWorkshopNearPeer';
 
 export default class NearPeerToggle extends LightningElement {
+  @api config;
   @track isNearPeer;
   @track isLoading = false;
   error;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   _workshopId;
 

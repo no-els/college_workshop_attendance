@@ -2,16 +2,17 @@
   <lightning-layout multiple-rows>
     <!-- LEFT: Create + List -->
     <lightning-layout-item size="4" padding="around-small">
-      <c-cohort-create oncreated={handleCohortCreated}></c-cohort-create>
-      <c-cohort-list cohorts={cohorts} onselect={handleCohortSelect} ondelete={handleDeleteCohort}></c-cohort-list>
+      <c-cohort-create config={config} oncreated={handleCohortCreated}></c-cohort-create>
+      <c-cohort-list cohorts={cohorts} config={config} onselect={handleCohortSelect} ondelete={handleDeleteCohort}></c-cohort-list>
     </lightning-layout-item>
 
     <!-- RIGHT: Detail + Add Members -->
     <lightning-layout-item size="8" padding="around-small">
-      <c-cohort-detail cohort-id={selectedCohortId}></c-cohort-detail>
+      <c-cohort-detail cohort-id={selectedCohortId} config={config}></c-cohort-detail>
       <template if:true={selectedCohortId}>
         <c-cohort-add-members
           cohort-id={selectedCohortId}
+          config={config}
           onrefreshmembers={handleRefreshMembers}>
         </c-cohort-add-members>
       </template>
