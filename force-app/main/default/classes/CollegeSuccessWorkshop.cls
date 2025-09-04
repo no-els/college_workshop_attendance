@@ -10,9 +10,16 @@ public static List<Contact> getContactsAll() {
 }
 
     @AuraEnabled(cacheable=true)
-    public static List<Workshop__c> searchWorkshops(String searchTerm) {
+    public static List<Workshop__c> searchWorkshops(String searchTerm, String program) {
         String query = '%' + searchTerm + '%';
-        return [SELECT Id, Name, Date__c, Site__c, Near_Peer_Workshop__c FROM Workshop__c WHERE Name LIKE :query order by Date__c, Name];
+        String soql = 'SELECT Id, Name, Date__c, Site__c, Near_Peer_Workshop__c FROM Workshop__c WHERE Name LIKE :query';
+        
+        if (String.isNotBlank(program)) {
+            soql += ' AND Program__c = :program';
+        }
+        
+        soql += ' ORDER BY Date__c, Name';
+        return Database.query(soql);
     }
     @AuraEnabled
 public static Boolean getNearPeerFlag(Id workshopId) {

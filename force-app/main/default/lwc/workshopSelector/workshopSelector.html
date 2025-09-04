@@ -6,7 +6,7 @@
     options={workshopOptions}
     onchange={handleWorkshopSelect}>
   </lightning-combobox>
-  <c-workshop-series-create-modal onworkshopcreated={handleWorkshopCreated}></c-workshop-series-create-modal>
+  <c-workshop-series-create-modal config={config} onworkshopcreated={handleWorkshopCreated}></c-workshop-series-create-modal>
   <c-workshop-tree-selector onworkshopchange={handleWorkshopSelect}></c-workshop-tree-selector>
 
 

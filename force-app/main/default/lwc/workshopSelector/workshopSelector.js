@@ -30,7 +30,9 @@ export default class WorkshopSelector extends LightningElement {
   }
 
   performSearch() {
-    searchWorkshops({ searchTerm: this.searchTerm })
+    const program = this.showPPP ? 'Parent Partner Program' : (this.showCollegeSuccess ? 'College Success' : null);
+    
+    searchWorkshops({ searchTerm: this.searchTerm, program: program })
       .then(result => {
         this.workshops = result;
       })

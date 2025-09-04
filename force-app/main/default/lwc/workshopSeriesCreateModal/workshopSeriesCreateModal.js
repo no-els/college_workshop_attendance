@@ -2,8 +2,21 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class WorkshopSeriesCreateModal extends LightningElement {
+  @api config;
   @track isOpen = false;
   @track isSubmitting = false;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
+  
+  get defaultProgram() {
+    if (this.showPPP) {
+      return 'Parent Partner Program';
+    } else if (this.showCollegeSuccess) {
+      return 'College Success';
+    }
+    return '';
+  }
 
   openModal = () => {
     this.isOpen = true;
@@ -51,6 +64,10 @@ export default class WorkshopSeriesCreateModal extends LightningElement {
     const fields = evt.detail.fields;
     if (!fields.School_Year__c) {
       fields.School_Year__c = this.defaultSchoolYear;
+    }
+    // Ensure Program__c is set based on user type
+    if (!fields.Program__c) {
+      fields.Program__c = this.defaultProgram;
     }
     // Optionally normalize Name (example: trim)
     if (fields.Name && typeof fields.Name === 'string') {

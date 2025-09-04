@@ -47,6 +47,9 @@
 
             <!-- New: School Year picklist (defaults set in JS) -->
             <lightning-input-field field-name="School_Year__c" required data-id="school-year"></lightning-input-field>
+            
+            <!-- Program field hidden - set automatically in background -->
+            <lightning-input-field field-name="Program__c" value={defaultProgram} class="slds-hide"></lightning-input-field>
 
             <!-- Owner defaults to current user; include if you want to expose it -->
             <!-- <lightning-input-field field-name="OwnerId"></lightning-input-field> -->

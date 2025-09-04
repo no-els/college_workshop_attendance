@@ -74,7 +74,7 @@ private class CollegeSuccessWorkshopTest {
     @IsTest
     static void testSearchWorkshops() {
         Test.startTest();
-        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('WS A');
+        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('WS A', 'College Success');
         Test.stopTest();
         System.assert(!found.isEmpty(), 'Should find workshops with "WS A"');
     }
@@ -426,7 +426,7 @@ private class CollegeSuccessWorkshopTest {
     @IsTest
     static void testSearchWorkshopsEmptyString() {
         Test.startTest();
-        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('');
+        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('', 'College Success');
         Test.stopTest();
         
         System.assert(!found.isEmpty(), 'Empty search should return all workshops');
@@ -435,7 +435,7 @@ private class CollegeSuccessWorkshopTest {
     @IsTest
     static void testSearchWorkshopsNoResults() {
         Test.startTest();
-        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('XYZ123');
+        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('XYZ123', 'College Success');
         Test.stopTest();
         
         System.assertEquals(0, found.size(), 'Should return empty list for no matches');
