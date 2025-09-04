@@ -146,5 +146,7 @@ export default class PossibleAttendeesPanel extends LightningElement {
     console.log('New contact created:', contactId);
     // Refresh the contacts list to include the new contact
     this.handleRefreshFromChild();
+    // Close the modal
+    this.isModalOpen = false;
   }
 }
