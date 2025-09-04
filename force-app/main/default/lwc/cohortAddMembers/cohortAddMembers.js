@@ -48,9 +48,11 @@ export default class CohortAddMembers extends LightningElement {
   performSearch() {
     let contacts = [...this.allContacts];
     
-    // Filter by record type for PPP - only show Parent record type
+    // Filter by record type - PPP sees Parents, College Success sees Students
     if (this.showPPP) {
       contacts = contacts.filter(c => c.RecordType?.Name === 'Parent');
+    } else if (this.showCollegeSuccess) {
+      contacts = contacts.filter(c => c.RecordType?.Name === 'Student');
     }
     
     if (this.fuseLoaded && this.searchTerm) {

@@ -88,9 +88,11 @@ export default class PossibleAttendeesPanel extends LightningElement {
   filterAndSearchContacts() {
     let base = [...this.allContacts];
 
-    // Filter by record type for PPP - only show Parent record type
+    // Filter by record type - PPP sees Parents, College Success sees Students
     if (this.showPPP) {
       base = base.filter(c => c.RecordType?.Name === 'Parent');
+    } else if (this.showCollegeSuccess) {
+      base = base.filter(c => c.RecordType?.Name === 'Student');
     }
 
     // Filter by site
