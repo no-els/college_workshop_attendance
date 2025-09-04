@@ -310,4 +310,22 @@ public static List<YearDTO> getYearsSeriesWorkshops() {
         ];
         return w;   
     }
+
+    @AuraEnabled
+    public static Id createParentContact(String firstName, String lastName, String phone, String site1, String site2) {
+        // Get the Parent record type
+        Id parentRecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByDeveloperName().get('Parent').getRecordTypeId();
+        
+        Contact newContact = new Contact(
+            FirstName = firstName,
+            LastName = lastName,
+            Phone = phone,
+            Site__c = site1,
+            Site_2__c = site2,
+            RecordTypeId = parentRecordTypeId
+        );
+        
+        insert newContact;
+        return newContact.Id;
+    }
 }

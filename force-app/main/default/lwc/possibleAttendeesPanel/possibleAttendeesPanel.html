@@ -1,19 +1,36 @@
 <template>
   <c-contact-search-input onsearchtermchange={handleSearchTermChange}></c-contact-search-input>
   
-  <!-- Site filter for PPP users -->
+  <!-- PPP-specific controls -->
   <template if:true={showPPP}>
-    <div class="slds-m-bottom_small">
-      <lightning-combobox
-        name="siteFilter"
-        label="Filter by Site"
-        value={selectedSiteFilter}
-        options={siteOptions}
-        onchange={handleSiteFilterContactChange}
-        placeholder="All Sites">
-      </lightning-combobox>
+    <div class="slds-m-bottom_small slds-grid slds-grid_align-spread">
+      <div class="slds-col slds-size_1-of-2">
+        <lightning-combobox
+          name="siteFilter"
+          label="Filter by Site"
+          value={selectedSiteFilter}
+          options={siteOptions}
+          onchange={handleSiteFilterContactChange}
+          placeholder="All Sites">
+        </lightning-combobox>
+      </div>
+      <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+        <lightning-button
+          label="Create New Parent"
+          variant="brand"
+          onclick={handleOpenModal}
+          class="slds-m-top_large">
+        </lightning-button>
+      </div>
     </div>
   </template>
   
   <c-attendee-table contacts={filteredContacts} config={config} onselect={handleClick}></c-attendee-table>
+  
+  <!-- PPP Contact Modal -->
+  <c-ppp-contact-modal
+    is-open={isModalOpen}
+    onclose={handleCloseModal}
+    oncontactcreated={handleContactCreated}>
+  </c-ppp-contact-modal>
 </template>

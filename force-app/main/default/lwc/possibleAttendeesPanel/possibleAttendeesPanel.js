@@ -16,6 +16,7 @@ export default class PossibleAttendeesPanel extends LightningElement {
   fuseLoaded = false;
   selectedSiteFilter = 'All Sites';
   searchTerm = '';
+  @track isModalOpen = false;
   
   get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
   get showPPP() { return this.config?.showPPP; }
@@ -130,5 +131,20 @@ export default class PossibleAttendeesPanel extends LightningElement {
 
     this.filteredContacts = base;
     console.log('Final filtered contacts:', this.filteredContacts.length);
+  }
+
+  handleOpenModal() {
+    this.isModalOpen = true;
+  }
+
+  handleCloseModal() {
+    this.isModalOpen = false;
+  }
+
+  handleContactCreated(event) {
+    const contactId = event.detail;
+    console.log('New contact created:', contactId);
+    // Refresh the contacts list to include the new contact
+    this.handleRefreshFromChild();
   }
 }

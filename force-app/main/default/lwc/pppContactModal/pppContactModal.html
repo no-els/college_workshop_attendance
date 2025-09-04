@@ -1,0 +1,85 @@
+<template>
+  <template if:true={isOpen}>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <!-- Header -->
+        <header class="slds-modal__header">
+          <h2 class="slds-text-heading_medium">Create New Parent Contact</h2>
+          <button class="slds-button slds-button_icon slds-modal__close" onclick={handleClose}>
+            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+          </button>
+        </header>
+
+        <!-- Body -->
+        <div class="slds-modal__content slds-p-around_medium">
+          <lightning-layout multiple-rows>
+            <lightning-layout-item size="6" padding="around-small">
+              <lightning-input
+                label="First Name"
+                value={contactData.FirstName}
+                onchange={handleFirstNameChange}
+                required>
+              </lightning-input>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="6" padding="around-small">
+              <lightning-input
+                label="Last Name"
+                value={contactData.LastName}
+                onchange={handleLastNameChange}
+                required>
+              </lightning-input>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="6" padding="around-small">
+              <lightning-input
+                label="Phone"
+                type="tel"
+                value={contactData.Phone}
+                onchange={handlePhoneChange}>
+              </lightning-input>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="6" padding="around-small">
+              <lightning-combobox
+                label="Site 1"
+                value={contactData.Site1}
+                options={siteOptions}
+                onchange={handleSite1Change}
+                placeholder="Select Site">
+              </lightning-combobox>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="6" padding="around-small">
+              <lightning-combobox
+                label="Site 2"
+                value={contactData.Site2}
+                options={siteOptions}
+                onchange={handleSite2Change}
+                placeholder="Select Site">
+              </lightning-combobox>
+            </lightning-layout-item>
+          </lightning-layout>
+        </div>
+
+        <!-- Footer -->
+        <footer class="slds-modal__footer">
+          <lightning-button
+            label="Cancel"
+            onclick={handleClose}
+            class="slds-m-right_x-small">
+          </lightning-button>
+          <lightning-button
+            label="Create Contact"
+            variant="brand"
+            onclick={handleCreate}
+            disabled={isLoading || !isFormValid}>
+          </lightning-button>
+        </footer>
+      </div>
+    </section>
+    
+    <!-- Backdrop -->
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>
