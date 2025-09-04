@@ -2,8 +2,12 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class NewWorkshopModal extends LightningElement {
+  @api config;
   @track isModalOpen = false;
   isSubmitting = false;
+  
+  get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
+  get showPPP() { return this.config?.showPPP; }
 
   openModal() { this.isModalOpen = true; }
 
