@@ -446,7 +446,7 @@ private class CollegeSuccessWorkshopTest {
         // Create a contact with Extended_Day_Account__c to test the filter
         Contact extendedDayContact = new Contact(
             LastName = 'Extended Day Contact',
-            Extended_Day_Account__c = 'Test Account'
+            Extended_Day_Account__c = 123.45
         );
         insert extendedDayContact;
 
