@@ -4,7 +4,7 @@
       <c-workshop-manager config={config}></c-workshop-manager>
     </lightning-tab>
 
-    <lightning-tab label="Cohorts" value="cohorts">
+    <lightning-tab label="Cohorts" value="cohorts" if:false={showPPP}>
       <c-cohort-manager config={config}></c-cohort-manager>
     </lightning-tab>
 
