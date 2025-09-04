@@ -2,7 +2,7 @@ public with sharing class CollegeSuccessWorkshop {
     @AuraEnabled(cacheable=true)
 public static List<Contact> getContactsAll() {
     return [
-        SELECT Id, Name, Phone, Site__c, Site_2__c, Extended_Day_Account__c
+        SELECT Id, Name, Phone, Site__c, Site_2__c, Extended_Day_Account__c, RecordType.Name
         FROM Contact
         WHERE RecordType.DeveloperName IN ('Student', 'Parent')
           AND Extended_Day_Account__c = null

@@ -88,6 +88,11 @@ export default class PossibleAttendeesPanel extends LightningElement {
   filterAndSearchContacts() {
     let base = [...this.allContacts];
 
+    // Filter by record type for PPP - only show Parent record type
+    if (this.showPPP) {
+      base = base.filter(c => c.RecordType?.Name === 'Parent');
+    }
+
     // Filter by site
     if (this.selectedSiteFilter !== 'All Sites') {
       base = base.filter(c =>
