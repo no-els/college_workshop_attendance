@@ -205,4 +205,311 @@ private class CollegeSuccessWorkshopTest {
 
         System.assertEquals(w.Id, got.Id);
     }
+
+    @IsTest
+    static void testCreateParentContact() {
+        String firstName = 'Test';
+        String lastName = 'Parent';
+        String phone = '555-1234';
+        String site1 = 'Alvarado';
+        String site2 = 'Balboa High';
+
+        Test.startTest();
+        Id contactId = CollegeSuccessWorkshop.createParentContact(firstName, lastName, phone, site1, site2);
+        Test.stopTest();
+
+        // Verify the contact was created with correct data
+        Contact createdContact = [
+            SELECT Id, FirstName, LastName, Phone, Site__c, Site_2__c, RecordType.DeveloperName
+            FROM Contact 
+            WHERE Id = :contactId
+        ];
+
+        System.assertEquals(firstName, createdContact.FirstName, 'First name should match');
+        System.assertEquals(lastName, createdContact.LastName, 'Last name should match');
+        System.assertEquals(phone, createdContact.Phone, 'Phone should match');
+        System.assertEquals(site1, createdContact.Site__c, 'Site 1 should match');
+        System.assertEquals(site2, createdContact.Site_2__c, 'Site 2 should match');
+        System.assertEquals('Parent', createdContact.RecordType.DeveloperName, 'Record type should be Parent');
+    }
+
+    @IsTest
+    static void testCreateParentContactWithNullValues() {
+        String firstName = 'Test';
+        String lastName = 'Parent';
+        String phone = null;
+        String site1 = null;
+        String site2 = null;
+
+        Test.startTest();
+        Id contactId = CollegeSuccessWorkshop.createParentContact(firstName, lastName, phone, site1, site2);
+        Test.stopTest();
+
+        // Verify the contact was created with null values handled properly
+        Contact createdContact = [
+            SELECT Id, FirstName, LastName, Phone, Site__c, Site_2__c, RecordType.DeveloperName
+            FROM Contact 
+            WHERE Id = :contactId
+        ];
+
+        System.assertEquals(firstName, createdContact.FirstName, 'First name should match');
+        System.assertEquals(lastName, createdContact.LastName, 'Last name should match');
+        System.assertEquals(null, createdContact.Phone, 'Phone should be null');
+        System.assertEquals(null, createdContact.Site__c, 'Site 1 should be null');
+        System.assertEquals(null, createdContact.Site_2__c, 'Site 2 should be null');
+        System.assertEquals('Parent', createdContact.RecordType.DeveloperName, 'Record type should be Parent');
+    }
+
+    @IsTest
+    static void testCreateParentContactDuplicate() {
+        String firstName = 'Test';
+        String lastName = 'Parent';
+        String phone = '555-1234';
+        String site1 = 'Alvarado';
+        String site2 = 'Balboa High';
+
+        Test.startTest();
+        // Create first contact
+        Id contactId1 = CollegeSuccessWorkshop.createParentContact(firstName, lastName, phone, site1, site2);
+        // Create second contact with same name (should be allowed)
+        Id contactId2 = CollegeSuccessWorkshop.createParentContact(firstName, lastName, phone, site1, site2);
+        Test.stopTest();
+
+        System.assertNotEquals(contactId1, contactId2, 'Should create separate contacts');
+        
+        List<Contact> contacts = [
+            SELECT Id FROM Contact 
+            WHERE FirstName = :firstName AND LastName = :lastName
+        ];
+        System.assertEquals(2, contacts.size(), 'Should have two contacts with same name');
+    }
+
+    @IsTest
+    static void testGetContactsAllWithRecordType() {
+        Test.startTest();
+        List<Contact> contacts = CollegeSuccessWorkshop.getContactsAll();
+        Test.stopTest();
+
+        System.assert(!contacts.isEmpty(), 'Should return contacts');
+        
+        // Verify that RecordType.Name is included in the query
+        for (Contact c : contacts) {
+            System.assertNotEquals(null, c.RecordType, 'RecordType should be included in query');
+        }
+    }
+
+    @IsTest
+    static void testAddAttendeeDuplicate() {
+        Workshop__c w = [SELECT Id FROM Workshop__c WHERE Name='WS A1' LIMIT 1];
+        Contact c = [SELECT Id FROM Contact WHERE LastName='Alpha' LIMIT 1]; // Already has attendee
+
+        Test.startTest();
+        Boolean added = CollegeSuccessWorkshop.addAttendee(c.Id, w.Id);
+        Test.stopTest();
+
+        System.assertEquals(false, added, 'Should not add duplicate attendee');
+    }
+
+    @IsTest
+    static void testAddAttendeeInvalidIds() {
+        Test.startTest();
+        Boolean added = CollegeSuccessWorkshop.addAttendee('001000000000000', 'a000000000000000');
+        Test.stopTest();
+
+        System.assertEquals(false, added, 'Should handle invalid IDs gracefully');
+    }
+
+    @IsTest
+    static void testUpdateAttendeeStatusInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.updateAttendeeStatus('a000000000000000', 'Mentor');
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testUpdateAttendeeAttendanceInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.updateAttendeeAttendance('a000000000000000', 'Present');
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testGetNearPeerFlagInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.getNearPeerFlag('a000000000000000');
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testUpdateWorkshopNearPeerInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.updateWorkshopNearPeer('a000000000000000', true);
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testGetCompletedFlagInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.getCompletedFlag('a000000000000000');
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testUpdateWorkshopCompletedInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.updateWorkshopCompleted('a000000000000000', true);
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testGetWorkshopByIdInvalidId() {
+        Test.startTest();
+        try {
+            CollegeSuccessWorkshop.getWorkshopById('a000000000000000');
+            System.assert(false, 'Should have thrown an exception');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Error'), 'Should throw error for invalid ID');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testAddBatchAttendanceEmptyList() {
+        Test.startTest();
+        CollegeSuccessWorkshop.addBatchAttendance(new List<Map<String,String>>());
+        Test.stopTest();
+        
+        // Should not throw any exception
+        System.assert(true, 'Should handle empty list gracefully');
+    }
+
+    @IsTest
+    static void testAddBatchAttendanceNullList() {
+        Test.startTest();
+        CollegeSuccessWorkshop.addBatchAttendance(null);
+        Test.stopTest();
+        
+        // Should not throw any exception
+        System.assert(true, 'Should handle null list gracefully');
+    }
+
+    @IsTest
+    static void testSearchWorkshopsEmptyString() {
+        Test.startTest();
+        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('');
+        Test.stopTest();
+        
+        System.assert(!found.isEmpty(), 'Empty search should return all workshops');
+    }
+
+    @IsTest
+    static void testSearchWorkshopsNoResults() {
+        Test.startTest();
+        List<Workshop__c> found = CollegeSuccessWorkshop.searchWorkshops('XYZ123');
+        Test.stopTest();
+        
+        System.assertEquals(0, found.size(), 'Should return empty list for no matches');
+    }
+
+    @IsTest
+    static void testGetContactsAllWithExtendedDayFilter() {
+        // Create a contact with Extended_Day_Account__c to test the filter
+        Contact extendedDayContact = new Contact(
+            LastName = 'Extended Day Contact',
+            Extended_Day_Account__c = 'Test Account'
+        );
+        insert extendedDayContact;
+
+        Test.startTest();
+        List<Contact> contacts = CollegeSuccessWorkshop.getContactsAll();
+        Test.stopTest();
+
+        // Verify that the extended day contact is not included
+        Boolean foundExtendedDay = false;
+        for (Contact c : contacts) {
+            if (c.Id == extendedDayContact.Id) {
+                foundExtendedDay = true;
+                break;
+            }
+        }
+        System.assertEquals(false, foundExtendedDay, 'Extended day contacts should be filtered out');
+    }
+
+    @IsTest
+    static void testCreateParentContactWithSpecialCharacters() {
+        String firstName = 'Test\'s';
+        String lastName = 'O\'Connor';
+        String phone = '(555) 123-4567';
+        String site1 = 'Site & More';
+        String site2 = 'Site "Quote"';
+
+        Test.startTest();
+        Id contactId = CollegeSuccessWorkshop.createParentContact(firstName, lastName, phone, site1, site2);
+        Test.stopTest();
+
+        Contact createdContact = [
+            SELECT Id, FirstName, LastName, Phone, Site__c, Site_2__c
+            FROM Contact 
+            WHERE Id = :contactId
+        ];
+
+        System.assertEquals(firstName, createdContact.FirstName, 'Special characters in first name should be preserved');
+        System.assertEquals(lastName, createdContact.LastName, 'Special characters in last name should be preserved');
+        System.assertEquals(phone, createdContact.Phone, 'Special characters in phone should be preserved');
+        System.assertEquals(site1, createdContact.Site__c, 'Special characters in site1 should be preserved');
+        System.assertEquals(site2, createdContact.Site_2__c, 'Special characters in site2 should be preserved');
+    }
+
+    @IsTest
+    static void testGetAttendeesWithNoAttendees() {
+        Workshop__c w = [SELECT Id FROM Workshop__c WHERE Name='WS Loose' LIMIT 1]; // No attendees
+
+        Test.startTest();
+        List<Attendee__c> atts = CollegeSuccessWorkshop.getAttendees(w.Id);
+        Test.stopTest();
+
+        System.assertEquals(0, atts.size(), 'Should return empty list for workshop with no attendees');
+    }
+
+    @IsTest
+    static void testGetWorkshopsGroupedBySeriesWithNoSeries() {
+        // Create a workshop without a series
+        Workshop__c looseWorkshop = [SELECT Id FROM Workshop__c WHERE Name='WS Loose' LIMIT 1];
+
+        Test.startTest();
+        Map<Id, List<Workshop__c>> m = CollegeSuccessWorkshop.getWorkshopsGroupedBySeries();
+        Test.stopTest();
+
+        System.assert(!m.isEmpty(), 'Should still return grouped workshops even with loose workshops');
+    }
 }
