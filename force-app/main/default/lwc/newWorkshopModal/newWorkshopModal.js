@@ -8,6 +8,15 @@ export default class NewWorkshopModal extends LightningElement {
   
   get showCollegeSuccess() { return this.config?.showCollegeSuccess; }
   get showPPP() { return this.config?.showPPP; }
+  
+  get defaultProgram() {
+    if (this.showPPP) {
+      return 'Parent Partner Program';
+    } else if (this.showCollegeSuccess) {
+      return 'College Success';
+    }
+    return '';
+  }
 
   openModal() { this.isModalOpen = true; }
 

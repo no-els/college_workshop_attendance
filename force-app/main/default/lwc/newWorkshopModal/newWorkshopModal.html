@@ -28,7 +28,7 @@
                         <lightning-input-field field-name="Name"></lightning-input-field>
                         <lightning-input-field field-name="Date__c"></lightning-input-field>
                         <lightning-input-field field-name="Workshop_Series__c"></lightning-input-field>
-                        <lightning-input-field field-name="Program__c"></lightning-input-field>
+                        <lightning-input-field field-name="Program__c" value={defaultProgram}></lightning-input-field>
                         
                         <!-- Site field for PPP users -->
                         <template if:true={showPPP}>
