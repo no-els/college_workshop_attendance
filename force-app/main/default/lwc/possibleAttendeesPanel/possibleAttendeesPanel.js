@@ -91,7 +91,7 @@ export default class PossibleAttendeesPanel extends LightningElement {
   }
 
   handleSiteFilterContactChange(event) {
-    this.selectedSiteFilter = event.detail;
+    this.selectedSiteFilter = event.detail.value;
     this.filterAndSearchContacts();
   }
 
@@ -102,27 +102,33 @@ export default class PossibleAttendeesPanel extends LightningElement {
 
   filterAndSearchContacts() {
     let base = [...this.allContacts];
+    console.log('Starting with', base.length, 'contacts');
 
     // Filter by record type - PPP sees Parents, College Success sees Students
     if (this.showPPP) {
       base = base.filter(c => c.RecordType?.Name === 'Parent');
+      console.log('After PPP filter:', base.length, 'contacts');
     } else if (this.showCollegeSuccess) {
       base = base.filter(c => c.RecordType?.Name === 'Student');
+      console.log('After College Success filter:', base.length, 'contacts');
     }
 
     // Filter by site
-    if (this.selectedSiteFilter !== 'All Sites') {
+    if (this.selectedSiteFilter && this.selectedSiteFilter !== 'All Sites') {
       base = base.filter(c =>
         c.Site__c === this.selectedSiteFilter || c.Site_2__c === this.selectedSiteFilter
       );
+      console.log('After site filter:', base.length, 'contacts, filter:', this.selectedSiteFilter);
     }
 
     // Fuzzy search
     if (this.fuseLoaded && this.searchTerm) {
       const fuseResults = search(this.searchTerm);
       base = base.filter(c => fuseResults.some(r => r.Id === c.Id));
+      console.log('After search filter:', base.length, 'contacts');
     }
 
     this.filteredContacts = base;
+    console.log('Final filtered contacts:', this.filteredContacts.length);
   }
 }
