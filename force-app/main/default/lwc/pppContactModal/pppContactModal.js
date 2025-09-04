@@ -22,10 +22,20 @@ export default class PppContactModal extends LightningElement {
     // You can either hardcode these or fetch from Apex
     this.siteOptions = [
       { label: 'Select Site', value: '' },
-      { label: 'Site A', value: 'Site A' },
-      { label: 'Site B', value: 'Site B' },
-      { label: 'Site C', value: 'Site C' },
-      { label: 'Site D', value: 'Site D' }
+      { label: 'Alvarado', value: 'Alvarado' },
+      { label: 'Balboa High', value: 'Balboa High' },
+      { label: 'Bessie', value: 'Bessie' },
+      { label: 'Bryant', value: 'Bryant' },
+      { label: 'Cal Academy', value: 'Cal Academy' },
+      { label: 'Cleveland', value: 'Cleveland' },
+      { label: 'Everett', value: 'Everett' },
+      { label: 'Flynn', value: 'Flynn' },
+      { label: 'Longfellow', value: 'Longfellow' },
+      { label: 'Marshall', value: 'Marshall' },
+      { label: 'SFC', value: 'SFC' },
+      { label: 'TECA', value: 'TECA' },
+      { label: 'Moscone', value: 'Moscone' }
+
     ];
   }
 
