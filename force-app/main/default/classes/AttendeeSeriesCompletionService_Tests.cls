@@ -1,32 +1,44 @@
 @IsTest
 private class AttendeeSeriesCompletionService_Tests {
-    @IsTest
-    static void testMultipleSeriesRules() {
-        // ===== Custom Metadata (two active rules) =====
-        insert new Series_Completion_Rule__mdt(
-            DeveloperName = 'NPM_Fall_2025',
-            MasterLabel   = 'NPM Fall 2025',
-            Active__c = true,
-            Series_Name__c = 'Near Peer Mentoring Fall 2025',
-            Requirement_Name__c = 'Fall 2025',
-            Target_Field_API__c = 'Completed_Near_Peer_Mentoring_Series__c',
-            Max_Misses__c = 1,
-            Qualifying_Statuses__c = 'Present;Excused Absence'
-        );
-        insert new Series_Completion_Rule__mdt(
-            DeveloperName = 'CR_Fall_2025',
-            MasterLabel   = 'Career Readiness Fall 2025',
-            Active__c = true,
-            Series_Name__c = 'Career Readiness Fall 2025',
-            Requirement_Name__c = 'Fall 2025',
-            Target_Field_API__c = 'Completed_Career_Readiness_Series__c',
-            Max_Misses__c = 4,
-            Qualifying_Statuses__c = 'Present;Excused Absence'
-        );
 
-        // ===== Series =====
-        Workshop_Series__c seriesNPM = new Workshop_Series__c(Name='Near Peer Mentoring Fall 2025');
-        Workshop_Series__c seriesCR  = new Workshop_Series__c(Name='Career Readiness Fall 2025');
+    @IsTest
+    static void testMultipleSeriesRules_DI() {
+        // ===== Inject rules instead of inserting CMDT =====
+        List<AttendeeSeriesCompletionService.Rule> rules = new List<AttendeeSeriesCompletionService.Rule>();
+
+        AttendeeSeriesCompletionService.Rule npm = new AttendeeSeriesCompletionService.Rule();
+        npm.seriesName = 'Near Peer Mentoring Fall 2025';
+        npm.requirementName = 'Fall 2025';
+        npm.targetFieldApi = 'Completed_Near_Peer_Mentoring_Series__c';
+        npm.maxMisses = 1;
+        npm.qualifyingStatuses = new Set<String>{ 'Present', 'Excused Absence' };
+        npm.active = true;
+        rules.add(npm);
+
+        AttendeeSeriesCompletionService.Rule cr = new AttendeeSeriesCompletionService.Rule();
+        cr.seriesName = 'Career Readiness Fall 2025';
+        cr.requirementName = 'Fall 2025';
+        cr.targetFieldApi = 'Completed_Career_Readiness__c'; // corrected API
+        cr.maxMisses = 4;
+        cr.qualifyingStatuses = new Set<String>{ 'Present', 'Excused Absence' };
+        cr.active = true;
+        rules.add(cr);
+
+        AttendeeSeriesCompletionService.setTestRules(rules);
+
+        // ===== Required picklists (use your safe values) =====
+        final String SCHOOL_YEAR = '25-26';       // safe value per your org (or '24-25')
+        final String PROGRAM     = 'College Success'; // safe value per your org
+
+        // ===== Series (School_Year__c required) =====
+        Workshop_Series__c seriesNPM = new Workshop_Series__c(
+            Name='Near Peer Mentoring Fall 2025',
+            School_Year__c=SCHOOL_YEAR
+        );
+        Workshop_Series__c seriesCR  = new Workshop_Series__c(
+            Name='Career Readiness Fall 2025',
+            School_Year__c=SCHOOL_YEAR
+        );
         insert new List<Workshop_Series__c>{ seriesNPM, seriesCR };
 
         // NPM: 5 workshops; CR: 10 workshops
@@ -35,7 +47,7 @@ private class AttendeeSeriesCompletionService_Tests {
             npmWs.add(new Workshop__c(
                 Name='NPM ' + i,
                 Workshop_Series__c = seriesNPM.Id,
-                Program__c='College Success'
+                Program__c = PROGRAM
             ));
         }
         List<Workshop__c> crWs = new List<Workshop__c>();
@@ -43,7 +55,7 @@ private class AttendeeSeriesCompletionService_Tests {
             crWs.add(new Workshop__c(
                 Name='CR ' + i,
                 Workshop_Series__c = seriesCR.Id,
-                Program__c='College Success'
+                Program__c = PROGRAM
             ));
         }
         insert npmWs;
@@ -53,12 +65,12 @@ private class AttendeeSeriesCompletionService_Tests {
         Contact student = new Contact(LastName='Test');
         insert student;
 
-        // Semester req row (both target fields exist on this object)
+        // Semester req row (include both target fields)
         Incentivized_Student_Req_Semester__c req = new Incentivized_Student_Req_Semester__c(
             Name='Fall 2025',
             Student__c = student.Id,
             Completed_Near_Peer_Mentoring_Series__c = 'No',
-            Completed_Career_Readiness_Series__c = 'No'
+            Completed_Career_Readiness__c = 'No'
         );
         insert req;
 
@@ -69,7 +81,7 @@ private class AttendeeSeriesCompletionService_Tests {
         insert new Attendee__c(Client__c=student.Id, Workshop__c=npmWs[3].Id, Attendee_Status__c='Present');
 
         req = [
-            SELECT Completed_Near_Peer_Mentoring_Series__c, Completed_Career_Readiness_Series__c
+            SELECT Completed_Near_Peer_Mentoring_Series__c, Completed_Career_Readiness__c
             FROM Incentivized_Student_Req_Semester__c WHERE Id=:req.Id
         ];
         System.assertEquals('Yes', req.Completed_Near_Peer_Mentoring_Series__c, 'NPM should be Yes after 4/5');
@@ -77,7 +89,8 @@ private class AttendeeSeriesCompletionService_Tests {
         // ----- NPM: delete one → 3/5 → No -----
         delete [SELECT Id FROM Attendee__c WHERE Client__c=:student.Id AND Workshop__c IN :npmWs LIMIT 1];
         req = [
-            SELECT Completed_Near_Peer_Mentoring_Series__c FROM Incentivized_Student_Req_Semester__c WHERE Id=:req.Id
+            SELECT Completed_Near_Peer_Mentoring_Series__c
+            FROM Incentivized_Student_Req_Semester__c WHERE Id=:req.Id
         ];
         System.assertEquals('No', req.Completed_Near_Peer_Mentoring_Series__c, 'NPM should revert to No at 3/5');
 
@@ -89,20 +102,20 @@ private class AttendeeSeriesCompletionService_Tests {
         insert crAttend;
 
         req = [
-            SELECT Completed_Career_Readiness_Series__c
+            SELECT Completed_Career_Readiness__c
             FROM Incentivized_Student_Req_Semester__c WHERE Id=:req.Id
         ];
-        System.assertEquals('Yes', req.Completed_Career_Readiness_Series__c, 'CR should be Yes at 6/10 (miss 4 allowed)');
+        System.assertEquals('Yes', req.Completed_Career_Readiness__c, 'CR should be Yes at 6/10 (miss 4 allowed)');
 
-        // ----- Set CR field to N/A → further attendance does not change it -----
-        update new Incentivized_Student_Req_Semester__c(Id=req.Id, Completed_Career_Readiness_Series__c='N/A');
+        // ----- Set CR to N/A → further attendance does not change it -----
+        update new Incentivized_Student_Req_Semester__c(Id=req.Id, Completed_Career_Readiness__c='N/A');
 
         insert new Attendee__c(Client__c=student.Id, Workshop__c=crWs[6].Id, Attendee_Status__c='Present');
 
         req = [
-            SELECT Completed_Career_Readiness_Series__c
+            SELECT Completed_Career_Readiness__c
             FROM Incentivized_Student_Req_Semester__c WHERE Id=:req.Id
         ];
-        System.assertEquals('N/A', req.Completed_Career_Readiness_Series__c, 'CR should remain N/A');
+        System.assertEquals('N/A', req.Completed_Career_Readiness__c, 'CR should remain N/A');
     }
 }
